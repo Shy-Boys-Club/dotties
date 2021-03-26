@@ -8,4 +8,4 @@ RUN npm install
 
 EXPOSE 8000
 
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "start-docker"]
