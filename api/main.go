@@ -7,7 +7,7 @@ import (
 )
 
 func helloWorld(writer http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(writer, "Hello world")
+	fmt.Fprintf(writer, `{"hello": "world hello"}`)
 }
 
 func ping(writer http.ResponseWriter, r *http.Request) {
@@ -17,7 +17,7 @@ func ping(writer http.ResponseWriter, r *http.Request) {
 func handleRequest() {
 	http.HandleFunc("/", helloWorld)
 	http.HandleFunc("/ping", ping)
-	log.Fatal(http.ListenAndServe(":42069", nil))
+	log.Fatal(http.ListenAndServe(":3001", nil))
 }
 
 func main() {
