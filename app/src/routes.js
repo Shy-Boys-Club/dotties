@@ -5,9 +5,9 @@ const routes = [
         import: () => import('./dotties-app.js'),
     },
     {
-        path: 'info',
-        component: 'info-view',
-        import: () => import('./info-view.js'),
+        path: 'profile',
+        component: 'profile-view',
+        import: () => import('./views/profile.js'),
     },
 ];
 export default routes;
