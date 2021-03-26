@@ -1,0 +1,35 @@
+{
+    "name": "dotties-app",
+    "version": "1.0.0",
+    "description": "This project was created using the [Simplr Create](https://github.com/Simplr/Configs/tree/main/create) command",
+    "main": "index.js",
+    "scripts": {
+        "start": "wds --node-resolve --watch --open",
+        "build": "rimraf dist && rollup -c rollup.config.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@rollup/plugin-node-resolve": "^11.2.0",
+        "@simplr-wc/eslint-config": "^1.0.4",
+        "@simplr-wc/prettier-config": "^1.0.3",
+        "@web/dev-server": "^0.1.10",
+        "rimraf": "^3.0.2",
+        "rollup": "^2.42.4",
+        "rollup-plugin-copy": "^3.4.0",
+        "rollup-plugin-filesize": "^9.1.1",
+        "rollup-plugin-minify-html-literals": "^1.2.6",
+        "rollup-plugin-terser": "^7.0.2"
+    },
+    "prettier": "@simplr-wc/prettier-config",
+    "eslintConfig": {
+        "extends": [
+            "@simplr-wc/eslint-config"
+        ]
+    },
+    "dependencies": {
+        "@simplr-wc/router": "^6.1.2",
+        "lit-element": "^2.4.0"
+    }
+}
