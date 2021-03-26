@@ -1,4 +1,5 @@
 import { LitElement, html, css } from 'lit-element';
+import "./views/main-page-hero";
 
 export default class DottiesApp extends LitElement {
     static get properties() {
@@ -15,8 +16,7 @@ export default class DottiesApp extends LitElement {
 
     render() {
         return html`
-            <h2>${this.title}</h2>
-            <a href="/profile">To profile view</a>
+            <main-page-hero></main-page-hero>
         `;
     }
 
@@ -24,18 +24,7 @@ export default class DottiesApp extends LitElement {
         return css`
             :host {
                 display: flex;
-                flex-direction: column;
-                font-size: 1.6rem;
-                width: 100%;
-                height: 100vh;
-                align-items: center;
-                justify-content: center;
-                color: #fff;
-                overflow: hidden;
-            }
-
-            a {
-                color: inherit;
+                height: 100%;
             }
         `;
     }
