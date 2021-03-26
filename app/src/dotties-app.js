@@ -28,7 +28,6 @@ export default class DottiesApp extends LitElement {
                 font-size: 1.6rem;
                 width: 100%;
                 height: 100vh;
-                background: #108ad4;
                 align-items: center;
                 justify-content: center;
                 color: #fff;

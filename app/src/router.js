@@ -1,5 +1,6 @@
 import SimplrRouter from '@simplr-wc/router';
 import routes from './routes.js';
+import "./components/nav-bar";
 
 const routerOptions = {
     // transitionSpeed: 200,
