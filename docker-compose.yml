@@ -1,0 +1,19 @@
+version: '3.5'
+
+services:
+  api:
+    build:
+      context: api/.
+    ports:
+      - "3000:3000"
+    volumes:
+      - "./api/:/go/src/dottie"
+
+  frontend:
+    build:
+      context: app/.
+    ports:
+      - "8000:8000"
+    volumes:
+      - "./app/:/src"
+
