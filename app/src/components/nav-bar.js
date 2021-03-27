@@ -1,9 +1,104 @@
+import { changeView } from '@simplr-wc/router';
 import { css, html, LitElement } from 'lit-element';
 import { getTW } from '../util/twind-util';
 
 const { tw, sheet } = getTW();
 
 class NavBar extends LitElement {
+    static get properties() {
+        return {
+            links: { type: Array },
+            currentPage: { type: String },
+
+            dropdownActions: { type: Array },
+            dropdownOpen: { type: Boolean },
+        };
+    }
+
+    constructor() {
+        super();
+
+        this.currentPage = '/';
+        this.links = [
+            { title: 'Dashboard', url: '/' },
+            { title: 'Gallery', url: '/gallery' },
+        ];
+
+        this.dropdownActions = [
+            { title: 'Profile', action: this.getProfilePage.bind(this) },
+            { title: 'Settings', action: this.getSettingsPage.bind(this) },
+            { title: 'Log out', action: this.logout.bind(this) },
+        ];
+        this.dropdownOpen = false;
+    }
+
+    getProfilePage() {
+        this.dropdownOpen = false;
+        changeView('/profile');
+    }
+
+    getSettingsPage() {
+        this.dropdownOpen = false;
+        changeView('/settings');
+    }
+
+    logout() {
+        this.dropdownOpen = false;
+        console.log('Logout');
+    }
+
+    renderLinks() {
+        return html`
+            ${this.links.map(
+            link =>
+                html` ${link.url === this.currentPage
+                    ? html`
+                              <a
+                                  href=${link.url}
+                                  class=${tw`bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium`}
+                                  aria-current="page"
+                                  >${link.title}</a
+                              >
+                          `
+                    : html`
+                              <a
+                                  href=${link.url}
+                                  class=${tw`text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium`}
+                                  >${link.title}</a
+                              >
+                          `}`,
+        )}
+        `;
+    }
+
+    renderDropdown() {
+        if (!this.dropdownOpen) {
+            return '';
+        }
+        return html`
+            <div
+                class=${tw`origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none`}
+                role="menu"
+                aria-orientation="vertical"
+                aria-labelledby="options-menu"
+            >
+                ${this.dropdownActions.map(
+            ddaction => html`
+                        <div class=${tw`py-1`} role="none">
+                            <button
+                                class=${tw`block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900`}
+                                role="menuitem"
+                                @click=${ddaction.action}
+                            >
+                                ${ddaction.title}
+                            </button>
+                        </div>
+                    `,
+        )}
+            </div>
+        `;
+    }
+
     render() {
         return html`
             <nav class=${tw`bg-gray-800`}>
@@ -52,32 +147,17 @@ class NavBar extends LitElement {
                         </div>
                         <div class=${tw`flex-1 flex items-center justify-center sm:items-stretch sm:justify-start`}>
                             <div class=${tw`flex-shrink-0 flex items-center`}>
-                                <img
-                                    class=${tw`block lg:hidden h-14 w-auto`}
-                                    src="/assets/logo_transparent.png"
-                                    alt="Workflow"
-                                />
-                                <img
-                                    class=${tw`hidden lg:block h-14 w-auto`}
-                                    src="/assets/logo_transparent.png"
-                                    alt="Workflow"
-                                />
+                                <a href="/">
+                                    <img
+                                        class=${tw`hidden lg:block h-14 w-auto`}
+                                        src="/assets/logo_transparent.png"
+                                        alt="Workflow"
+                                    />
+                                </a>
                             </div>
                             <div class=${tw`hidden sm:block sm:ml-6 md:flex items-center`}>
                                 <div class=${tw`flex space-x-4`}>
-                                    <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-                                    <a
-                                        href="/"
-                                        class=${tw`bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium`}
-                                        aria-current="page"
-                                        >Dashboard</a
-                                    >
-
-                                    <a
-                                        href="/profile"
-                                        class=${tw`text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium`}
-                                        >Profile</a
-                                    >
+                                    ${this.renderLinks()}
                                 </div>
                             </div>
                         </div>
@@ -110,6 +190,7 @@ class NavBar extends LitElement {
                             <div class=${tw`ml-3 relative`}>
                                 <div>
                                     <button
+                                        @click=${() => (this.dropdownOpen = !this.dropdownOpen)}
                                         type="button"
                                         class=${tw`bg-gray-800 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white`}
                                         id="user-menu"
@@ -147,6 +228,7 @@ class NavBar extends LitElement {
                         >
                     </div>
                 </div>
+                ${this.renderDropdown()}
             </nav>
         `;
     }
