@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+
+	"github.com/Shy-Boys-Club/dotties/api/pkg/github"
 )
 
 func helloWorld(writer http.ResponseWriter, r *http.Request) {
@@ -15,7 +17,7 @@ func ping(writer http.ResponseWriter, r *http.Request) {
 }
 
 func handleRequest() {
-	http.HandleFunc("/", helloWorld)
+	http.HandleFunc("/oauth/redirect", github.HandleOAuthRedirect)
 	http.HandleFunc("/ping", ping)
 	log.Fatal(http.ListenAndServe(":3001", nil))
 }

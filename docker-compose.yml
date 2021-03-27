@@ -8,6 +8,8 @@ services:
       - "3000:3000"
     volumes:
       - "./api/:/go/src/dottie"
+    env_file:
+      - .env
 
   frontend:
     build:
