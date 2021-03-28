@@ -31,7 +31,6 @@
     },
     "dependencies": {
         "@simplr-wc/router": "^6.1.2",
-        "lit-element": "^2.4.0",
-        "twind": "^0.16.9"
+        "lit-element": "^2.4.0"
     }
 }
