@@ -41,6 +41,7 @@ func HandleOAuthRedirect(w http.ResponseWriter, r *http.Request) {
 	u, err := NewClient(t.AccessToken)
 	if err != nil {
 		fmt.Println(err)
+		return
 	}
 
 	j := auth.JwtHandler{
