@@ -32,6 +32,9 @@ class NavBar extends LitElement {
         this.dropdownOpen = false;
     }
 
+    firstUpdated() {
+    }
+
     getProfilePage() {
         this.dropdownOpen = false;
         changeView('/profile');
