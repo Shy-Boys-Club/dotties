@@ -3,6 +3,7 @@ package github
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/Shy-Boys-Club/dotties/api/pkg/auth"
 	"net/http"
 	"os"
 )
@@ -10,6 +11,7 @@ import (
 var (
 	ghClientId  string
 	ghClientSec string
+	jwtKey      string
 )
 
 type GithubAccessResponse struct {
@@ -19,6 +21,7 @@ type GithubAccessResponse struct {
 func init() {
 	ghClientId = os.Getenv("GITHUB_CLIENT_ID")
 	ghClientSec = os.Getenv("GITHUB_CLIENT_SECRET")
+	jwtKey = os.Getenv("JWT_SECRET_KEY")
 }
 
 func HandleOAuthRedirect(w http.ResponseWriter, r *http.Request) {
@@ -37,7 +40,28 @@ func HandleOAuthRedirect(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Fprintf(w, "<html>Welcome %s<br><img src='%s'></html>", *u.User.Name, *u.User.AvatarURL)
+
+	j := auth.JwtHandler{
+		SecretKey:  jwtKey,
+		Issuer:     "dottie",
+		Expiration: 60 * 24,
+	}
+
+	jwt, err := j.GenerateToken(auth.Claims{
+		Email:     *u.User.Email,
+		UserName:  *u.User.Name,
+		AvatarURL: *u.User.AvatarURL,
+		Admin:     false,
+		Mod:       false,
+	})
+
+	http.SetCookie(w, &http.Cookie{
+		Name:  "token",
+		Value: jwt,
+		Path:  "/",
+	})
+
+	http.Redirect(w, r, "http://127.0.0.1:8000", http.StatusTemporaryRedirect)
 }
 
 func retrieveCode(r *http.Request) (string, error) {
