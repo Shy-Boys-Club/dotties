@@ -28,12 +28,14 @@ func HandleOAuthRedirect(w http.ResponseWriter, r *http.Request) {
 	code, err := retrieveCode(r)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
 
 	t, err := getTokenFromGB(code)
 	if err != nil {
 		w.WriteHeader(http.StatusNotAcceptable)
 		w.Write([]byte(`{"error": "failed to authenicate with Github"}`))
+		return
 	}
 
 	u, err := NewClient(t.AccessToken)
