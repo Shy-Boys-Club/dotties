@@ -3,9 +3,11 @@ package github
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/Shy-Boys-Club/dotties/api/pkg/auth"
 	"net/http"
 	"os"
+
+	"github.com/Shy-Boys-Club/dotties/api/pkg/auth"
+	"github.com/sam-lane/loki"
 )
 
 var (
@@ -25,13 +27,17 @@ func init() {
 }
 
 func HandleOAuthRedirect(w http.ResponseWriter, r *http.Request) {
+	log := loki.NewJsonLogger()
+	log.Set(loki.TRACE)
 	code, err := retrieveCode(r)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+	log.Debug(code)
 
 	t, err := getTokenFromGB(code)
+	log.Debug(t.AccessToken)
 	if err != nil {
 		w.WriteHeader(http.StatusNotAcceptable)
 		w.Write([]byte(`{"error": "failed to authenicate with Github"}`))
@@ -40,7 +46,7 @@ func HandleOAuthRedirect(w http.ResponseWriter, r *http.Request) {
 
 	u, err := NewClient(t.AccessToken)
 	if err != nil {
-		fmt.Println(err)
+		log.Error(err.Error())
 		return
 	}
 

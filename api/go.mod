@@ -7,5 +7,6 @@ require (
 	github.com/fatih/structs v1.1.0
 	github.com/google/go-github v17.0.0+incompatible // indirect
 	github.com/google/go-github/v34 v34.0.0
+	github.com/sam-lane/loki v0.0.0-20210125151534-3d24d568d79e
 	golang.org/x/oauth2 v0.0.0-20210323180902-22b0adad7558
 )
