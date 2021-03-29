@@ -20,10 +20,10 @@ func ping(writer http.ResponseWriter, r *http.Request) {
 func Middleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		origin := r.Header.Get("Origin")
+		EnableCors(&w, origin)
 		if (*r).Method == "OPTIONS" {
 			return
 		}
-		EnableCors(&w, origin)
 		next.ServeHTTP(w, r)
 	})
 }
