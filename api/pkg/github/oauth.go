@@ -64,7 +64,7 @@ func HandleOAuthRedirect(w http.ResponseWriter, r *http.Request) {
 	})
 
 	http.SetCookie(w, &http.Cookie{
-		Name:  "token",
+		Name:  "dottie-token",
 		Value: jwt,
 		Path:  "/",
 	})
