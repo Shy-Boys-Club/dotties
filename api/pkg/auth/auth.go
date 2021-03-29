@@ -16,7 +16,6 @@ type JwtHandler struct {
 }
 
 type Claims struct {
-	Email     string
 	UserName  string
 	AvatarURL string
 	Admin     bool
