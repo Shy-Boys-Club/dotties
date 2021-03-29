@@ -37,7 +37,7 @@ func HandleOAuthRedirect(w http.ResponseWriter, r *http.Request) {
 	log.Debug(code)
 
 	t, err := getTokenFromGB(code)
-	log.Debug(t.AccessToken)
+	log.Debug("Access token: " + t.AccessToken)
 	if err != nil {
 		w.WriteHeader(http.StatusNotAcceptable)
 		w.Write([]byte(`{"error": "failed to authenicate with Github"}`))
@@ -57,8 +57,7 @@ func HandleOAuthRedirect(w http.ResponseWriter, r *http.Request) {
 	}
 
 	jwt, err := j.GenerateToken(auth.Claims{
-		Email:     *u.User.Email,
-		UserName:  *u.User.Name,
+		UserName:  *u.User.Login,
 		AvatarURL: *u.User.AvatarURL,
 		Admin:     false,
 		Mod:       false,
@@ -83,8 +82,10 @@ func retrieveCode(r *http.Request) (string, error) {
 }
 
 func getTokenFromGB(code string) (GithubAccessResponse, error) {
+
 	ghU := fmt.Sprintf("https://github.com/login/oauth/access_token?client_id=%s&client_secret=%s&code=%s", ghClientId, ghClientSec, code)
 
+	fmt.Println(ghU)
 	req, err := http.NewRequest(http.MethodPost, ghU, nil)
 	if err != nil {
 		return GithubAccessResponse{}, fmt.Errorf("failed to create request struct: %v", err)
@@ -100,7 +101,8 @@ func getTokenFromGB(code string) (GithubAccessResponse, error) {
 	defer r.Body.Close()
 
 	t := GithubAccessResponse{}
-	if err := json.NewDecoder(r.Body).Decode(&t); err != nil {
+	json.NewDecoder(r.Body).Decode(&t)
+	if len(t.AccessToken) <= 0 {
 		return t, fmt.Errorf("Failed to parse json repsonse from GitHub: %v", err)
 	}
 
