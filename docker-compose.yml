@@ -20,3 +20,16 @@ services:
       - "./app/:/app"
       - "/app/node_modules"
 
+  db:
+    image: "postgres:latest"
+    container_name: "postgres-dotties"
+    ports:
+      - "5522:5432"
+#    volumes:
+#      - db-dotties:/var/lib/postgresql/data
+    env_file:
+      - db/.env_db
+
+#volumes:
+#  db-dotties:
+
