@@ -1,2 +1,6 @@
 .env
 api/gin-bin
+.env_db
+.idea/
+__pycache__/
+
