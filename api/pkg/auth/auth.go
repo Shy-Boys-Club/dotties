@@ -1,6 +1,9 @@
 package auth
 
 import (
+	"encoding/json"
+	"fmt"
+	"net/http"
 	"os"
 	"reflect"
 	"time"
@@ -21,6 +24,11 @@ type Claims struct {
 	Admin     bool
 	Mod       bool
 	jwt.StandardClaims
+}
+
+type UserData struct {
+	UserName  string `json:"userName"`
+	AvatarURL string `json:"avatarUrl"`
 }
 
 func (j *JwtHandler) GenerateToken(c Claims) (string, error) {
@@ -44,11 +52,42 @@ func (j *JwtHandler) InvalidateToken(token string) string {
 	return ""
 }
 
-func (j *JwtHandler) TokenHasClaims(t *string, c *Claims) bool {
-	token, err := jwt.Parse(*t, func(t *jwt.Token) (interface{}, error) {
+func Verify(writer http.ResponseWriter, r *http.Request) {
+	cookie, err := r.Cookie("dottie-token")
+	if err != nil {
+		// Cookie not found
+		return
+	}
+	// TODO: Refresh token
+	cookieData := ReadJWT(&cookie.Value)
+	claims := cookieData.Claims.(jwt.MapClaims)
+
+	userData := &UserData{
+		UserName:  claims["UserName"].(string),
+		AvatarURL: claims["AvatarURL"].(string),
+	}
+
+	jsonData, err := json.Marshal(userData)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Fprintf(writer, string(jsonData))
+}
+
+func ReadJWT(tokenString *string) *jwt.Token {
+	token, err := jwt.Parse(*tokenString, func(t *jwt.Token) (interface{}, error) {
 		return []byte(os.Getenv("JWT_SECRET_KEY")), nil
 	})
 	if err != nil {
+		return nil
+	}
+	return token
+}
+
+func (j *JwtHandler) TokenHasClaims(t *string, c *Claims) bool {
+	token := ReadJWT(t)
+	if token == nil {
 		return false
 	}
 

@@ -1,11 +1,13 @@
 import { changeView } from '@simplr-wc/router';
 import { css, html, LitElement } from 'lit-element';
+import { sub, read } from '@stoxy/core';
 
 class NavBar extends LitElement {
     static get properties() {
         return {
             links: { type: Array },
             currentPage: { type: String },
+            userData: { type: Object },
 
             dropdownActions: { type: Array },
             dropdownOpen: { type: Boolean },
@@ -14,6 +16,10 @@ class NavBar extends LitElement {
 
     constructor() {
         super();
+
+        sub('userData', e => {
+            this.userData = e.data;
+        });
 
         this.currentPage = '/';
         this.links = [
@@ -85,8 +91,8 @@ class NavBar extends LitElement {
                 </span>
 
                 <span class="dropdown-span">
-                    <button @click=${() => this.dropdownOpen = !this.dropdownOpen} class="profile-image-dropdown">
-                        <img src="https://avatars.githubusercontent.com/u/16068444?v=4" />
+                    <button @click=${() => (this.dropdownOpen = !this.dropdownOpen)} class="profile-image-dropdown">
+                        <img src="${this.userData ? this.userData.avatarUrl : '/assets/user_icon_placeholder.svg'}" />
                     </button>
 
                     ${this.renderDropdown()}
@@ -114,44 +120,42 @@ class NavBar extends LitElement {
                     justify-content: space-between;
                 }
 
-
-            .dropdown-span {
-                position: relative;
-            }
-
-            .dropdown {
-            position: absolute;
-                top: 150%;
-                right: 0;
-
-                display: flex;
-                background: #1f2936;
-                flex-direction: column;
-                
-            }
-
-            .dropdown-item {
-                padding: 0.6rem 1rem;
-                cursor: pointer;
-            }
-
-            .dropdown-item button {
-    font-size: 1.4rem;
-                background: none;
-                color: inherit;
-                border: none;
-                cursor: pointer;
+                .dropdown-span {
+                    position: relative;
                 }
 
-            .dropdown-item:hover {
+                .dropdown {
+                    position: absolute;
+                    top: 150%;
+                    right: 0;
+
+                    display: flex;
+                    background: #1f2936;
+                    flex-direction: column;
+                }
+
+                .dropdown-item {
+                    padding: 0.6rem 1rem;
+                    cursor: pointer;
+                }
+
+                .dropdown-item button {
+                    font-size: 1.4rem;
+                    background: none;
+                    color: inherit;
+                    border: none;
+                    cursor: pointer;
+                }
+
+                .dropdown-item:hover {
                     background: #111826;
                     color: #fff;
-            }
+                }
 
-            span {
-            display: flex;
-                align-items: center;
-            }
+                span {
+                    display: flex;
+                    align-items: center;
+                }
 
                 a {
                     color: inherit;
