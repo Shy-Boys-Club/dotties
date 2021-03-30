@@ -9,11 +9,11 @@ import json
 def get_config():
 
     db_settings = {
-        'dbhost': 'localhost',
+        'dbhost': 'postgres-dotties',
         'dbname': 'dottiesdev',
-        'dbuser': os.environ.get('LOCAL_DEV_DB_USER'),
-        'password': os.environ.get('LOCAL_DEV_DB_PASSWD'),
-        'port': 5522
+        'dbuser': os.environ.get('POSTGRES_USERNAME'),
+        'password': os.environ.get('POSTGRES_PASSWORD'),
+        'port': 5432
     }
 
     schema = 'dotties'

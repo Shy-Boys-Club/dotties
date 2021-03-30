@@ -16,7 +16,7 @@ def _set_config():
     dbname = conf.db_settings['dbname']
     dbuser = conf.db_settings['dbuser']
     dbhost = conf.db_settings['dbhost']
-    dbpassword = conf.db_settings['password'].replace("\'", "")
+    dbpassword = conf.db_settings['password']
     dbport = conf.db_settings['port']
 
     global CONNECTION_STRING
