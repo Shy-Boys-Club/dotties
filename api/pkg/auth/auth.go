@@ -56,6 +56,7 @@ func Verify(writer http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("dottie-token")
 	if err != nil {
 		// Cookie not found
+        fmt.Fprintf(writer, "{}");
 		return
 	}
 	// TODO: Refresh token
@@ -70,7 +71,8 @@ func Verify(writer http.ResponseWriter, r *http.Request) {
 	jsonData, err := json.Marshal(userData)
 	if err != nil {
 		fmt.Println(err)
-		return
+        fmt.Fprintf(writer, "{}");
+        return;
 	}
 	fmt.Fprintf(writer, string(jsonData))
 }

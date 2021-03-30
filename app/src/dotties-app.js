@@ -19,8 +19,9 @@ export default class DottiesApp extends LitElement {
             credentials: "include"
         }).then(res => res.json());
 
-        write("userData", userData);
-        console.log(userData);
+        if (Object.keys(userData).length > 0) {
+            write("userData", userData);
+        }
     }
 
 
