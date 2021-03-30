@@ -1,6 +1,7 @@
 import { changeView } from '@simplr-wc/router';
 import { css, html, LitElement } from 'lit-element';
 import { sub, read } from '@stoxy/core';
+import { logOut } from '../services/auth-service';
 
 class NavBar extends LitElement {
     static get properties() {
@@ -49,7 +50,7 @@ class NavBar extends LitElement {
 
     logout() {
         this.dropdownOpen = false;
-        console.log('Logout');
+        logOut();
     }
 
     renderLinks() {

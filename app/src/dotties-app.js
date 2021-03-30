@@ -1,5 +1,6 @@
 import { persistKey, write } from '@stoxy/core';
 import { LitElement, html, css } from 'lit-element';
+import { verifyAndSetUserdata } from './services/auth-service';
 import "./views/main-page-hero";
 
 export default class DottiesApp extends LitElement {
@@ -10,18 +11,7 @@ export default class DottiesApp extends LitElement {
     }
 
     firstUpdated() {
-        this.verifyCookies()
-    }
-
-    async verifyCookies() {
-
-        const userData = await fetch("http://127.0.0.1:3000/auth/verify", {
-            credentials: "include"
-        }).then(res => res.json());
-
-        if (Object.keys(userData).length > 0) {
-            write("userData", userData);
-        }
+        verifyAndSetUserdata();
     }
 
 
