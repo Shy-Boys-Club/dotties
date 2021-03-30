@@ -1,3 +1,4 @@
+/** @type {Array<import('@simplr-wc/router').SimplrRoute>} */
 const routes = [
     {
         path: '/',
@@ -18,6 +19,13 @@ const routes = [
         path: 'gallery',
         component: 'gallery-view',
         import: () => import('./views/gallery.js'),
+        routes: [
+            {
+                path: ":username",
+                component: "gallery-entry-view",
+                import: () => import("./views/gallery-entry.js")
+            }
+        ]
     },
 ];
 export default routes;

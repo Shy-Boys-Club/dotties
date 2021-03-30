@@ -1,40 +1,26 @@
 import { LitElement, html, css } from 'lit-element';
-import { getDotfiles } from '../services/repository-service';
-import '../components/dotfile-viewer';
 
 class GalleryView extends LitElement {
     static get properties() {
         return {
-            dotfiles: { type: Array },
+            users: { type: Array }
         };
     }
 
     constructor() {
         super();
-        this.dotfiles = {};
+        this.users = [];
     }
 
     firstUpdated() {
-        getDotfiles('Matsuuu/dotfiles').then(dotfiles => {
-            console.log(dotfiles);
-            this.dotfiles = dotfiles;
-        });
     }
 
-    renderFiles() {
-        return Object.keys(this.dotfiles).map(dotfileKey => {
-            console.log(dotfileKey);
-            return html` <dotfile-viewer title=${dotfileKey} .dotfile=${this.dotfiles[dotfileKey]}></dotfile-viewer> `;
-        });
-    }
 
     render() {
         return html`
-            <h2>Gallery view</h2>
+            <h2>Gallery</h2>
 
-            <div class="dotfile-list">
-                ${this.renderFiles()}
-            </div>
+            <a href="/gallery/Matsuuu">Matsuuu</a>
         `;
     }
 
@@ -43,10 +29,11 @@ class GalleryView extends LitElement {
             :host {
                 display: flex;
                 flex-direction: column;
-                padding-top: 10%;
+                padding-top: 5%;
                 width: 60%;
                 margin: 0 auto;
             }
+
         `;
     }
 }

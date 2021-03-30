@@ -28,9 +28,9 @@ class NavBar extends LitElement {
         ];
 
         this.dropdownActions = [
-            { title: 'Profile', action: this.getProfilePage.bind(this) },
-            { title: 'Settings', action: this.getSettingsPage.bind(this) },
-            { title: 'Log out', action: this.logout.bind(this) },
+            { title: 'Profile', action: this.getProfilePage.bind(this), requiresLogin: false },
+            { title: 'Settings', action: this.getSettingsPage.bind(this), requiresLogin: true },
+            { title: 'Log out', action: this.logout.bind(this), requiresLogin: true },
         ];
         this.dropdownOpen = false;
     }
@@ -67,16 +67,19 @@ class NavBar extends LitElement {
         if (!this.dropdownOpen) {
             return '';
         }
+        const isLoggedIn = this.userData != undefined;
         return html`
             <div class="dropdown" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
                 ${this.dropdownActions.map(
-            ddaction => html`
+            ddaction => {
+                if (ddaction.requiresLogin && !isLoggedIn) return '';
+                return html`
                         <div class="dropdown-item" role="none">
                             <button class="" role="menuitem" @click=${ddaction.action}>
                                 ${ddaction.title}
                             </button>
                         </div>
-                    `,
+                    `}
         )}
             </div>
         `;
@@ -86,7 +89,9 @@ class NavBar extends LitElement {
         return html`
             <nav>
                 <span>
-                    <img id="logo" src="/assets/logo_transparent.png" />
+                    <a href="/">
+                        <img id="logo" src="/assets/logo_transparent.png" />
+                    </a>
                     ${this.renderLinks()}
                 </span>
 

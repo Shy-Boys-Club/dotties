@@ -30,7 +30,7 @@
         ]
     },
     "dependencies": {
-        "@simplr-wc/router": "^6.1.2",
+        "@simplr-wc/router": "^6.1.4",
         "@stoxy/core": "^0.2.6",
         "lit-element": "^2.4.0",
         "shiki": "^0.9.3"
