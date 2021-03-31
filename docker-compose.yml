@@ -10,6 +10,8 @@ services:
       - "./api/:/go/src/dottie"
     env_file:
       - .env
+    links:
+        - db
 
   frontend:
     build:
