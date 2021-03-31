@@ -36,7 +36,8 @@ func Migrate() {
     db.AutoMigrate(&Repository{});
     db.AutoMigrate(&Image{});
 
-    TestInsert()
+    // If you want to test and add rows to table, uncomment below line
+    // TestInsert()
 }
 
 func TestInsert() {
