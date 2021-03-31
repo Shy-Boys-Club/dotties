@@ -31,7 +31,8 @@
     },
     "dependencies": {
         "@simplr-wc/router": "^6.1.2",
+        "@stoxy/core": "^0.2.6",
         "lit-element": "^2.4.0",
-        "twind": "^0.16.9"
+        "shiki": "^0.9.3"
     }
 }
