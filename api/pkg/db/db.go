@@ -1,20 +1,12 @@
 package db
 
 import (
+	"fmt"
 	"os"
 
-	"gorm.io/gorm"
 	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
-
-type User struct {
-    gorm.Model
-    Id int
-    GithubUsername string
-    GithubAccessToken string
-    GithubRefreshToken string
-    Email string
-}
 
 type DBCreds struct {
     DBUser string
@@ -32,15 +24,39 @@ func GetDbCredentials() (DBCreds) {
     }
 }
 
-func TestDB() {
+/**
+*   Handle Migration of Dotties database.
+*
+*  As new entities get added, their AutoMigrate should be called here
+*/
+func Migrate() {
+    fmt.Println("=== Migrating ===")
+    db := GetDB();
+    db.AutoMigrate(&AuthUser{});
+    db.AutoMigrate(&Repository{});
+    db.AutoMigrate(&Image{});
+
+    TestInsert()
+}
+
+func TestInsert() {
+    db := GetDB();
+    user := AuthUser{Email: "matias@shyboys.club"}
+    repository := Repository{ User: user, Name: "shy-boys-club/dotties" }
+    image := Image{ Repository: repository, URL: "https://i.redd.it/7e4iqnzjexy41.png" }
+    db.Create(&user)
+    db.Create(&repository)
+    db.Create(&image)
+    fmt.Println("Test insert run")
+}
+
+func GetDB() *gorm.DB {
     creds := GetDbCredentials()
-    // TODO: Please use something else than " + " 
-    dsn := "host=" + creds.DBAddress + " user=" + creds.DBUser + " password=" + creds.DBSecret + " dbname=" + creds.DBName + " port=5432 sslmode=disable TimeZone=Asia/Shanghai"
-    db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+
+    dbConnString := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=5432 sslmode=disable TimeZone=Europe/Helsinki", creds.DBAddress, creds.DBUser, creds.DBSecret, creds.DBName)
+    db, err := gorm.Open(postgres.Open(dbConnString), &gorm.Config{})
     if err != nil {
         panic("Failed to connect to db")
     }
-
-    db.AutoMigrate(&User{})
-    db.Create(&User{Id: 2, Email: "matias@shyboys.club"})
+    return db
 }
