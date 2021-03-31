@@ -7,6 +7,7 @@ import (
 
 	"github.com/Shy-Boys-Club/dotties/api/pkg/auth"
 	"github.com/Shy-Boys-Club/dotties/api/pkg/github"
+	"github.com/Shy-Boys-Club/dotties/api/pkg/db"
 )
 
 func helloWorld(writer http.ResponseWriter, r *http.Request) {
@@ -15,6 +16,7 @@ func helloWorld(writer http.ResponseWriter, r *http.Request) {
 
 func ping(writer http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(writer, "Pong")
+    db.TestDB()
 }
 
 func handleRequest() {

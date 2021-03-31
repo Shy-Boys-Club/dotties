@@ -10,6 +10,8 @@ services:
       - "./api/:/go/src/dottie"
     env_file:
       - .env
+    links:
+        - db
 
   frontend:
     build:
@@ -19,4 +21,29 @@ services:
     volumes:
       - "./app/:/app"
       - "/app/node_modules"
+
+  db:
+    build:
+      context: db/local_db/.
+    container_name: "postgres-dotties"
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-dotties:/var/lib/postgresql/data
+    env_file:
+      - db/.env_db
+      - .env
+
+  migration:
+    build:
+      context: db/local_db/migration/.
+    container_name: "migration"
+    depends_on:
+      - db
+    env_file:
+      - db/.env_db
+  
+
+volumes:
+  db-dotties:
 
