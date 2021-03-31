@@ -46,10 +46,15 @@ func (j *JwtHandler) GenerateToken(c Claims) (string, error) {
 	return signedToken, nil
 }
 
-//InvalidateToken is used to sign a user out by setting the exp time to 0
-func (j *JwtHandler) InvalidateToken(token string) string {
-
-	return ""
+//InvaidateCookie is used to sign a user out by setting the exp time to 0
+func InvaidateCookie(writer http.ResponseWriter, r *http.Request ) {
+    expiryTime := time.Now().AddDate(0,0,-1)
+	http.SetCookie(writer, &http.Cookie{
+		Name:  "dottie-token",
+		Value: "",
+		Path:  "/",
+        Expires: expiryTime,
+	})
 }
 
 func Verify(writer http.ResponseWriter, r *http.Request) {

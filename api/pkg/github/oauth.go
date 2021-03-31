@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/Shy-Boys-Club/dotties/api/pkg/auth"
 	"github.com/sam-lane/loki"
@@ -63,10 +64,12 @@ func HandleOAuthRedirect(w http.ResponseWriter, r *http.Request) {
 		Mod:       false,
 	})
 
+    expiryTime := time.Now().Local().Add(time.Minute * time.Duration(j.Expiration))
 	http.SetCookie(w, &http.Cookie{
 		Name:  "dottie-token",
 		Value: jwt,
 		Path:  "/",
+        Expires: expiryTime,
 	})
 
 	http.Redirect(w, r, "http://127.0.0.1:8000", http.StatusTemporaryRedirect)

@@ -17,6 +17,22 @@ func ping(writer http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(writer, "Pong")
 }
 
+func handleRequest() {
+	mux := http.NewServeMux()
+
+	mux.HandleFunc("/oauth/redirect", github.HandleOAuthRedirect)
+	mux.HandleFunc("/ping", ping)
+	mux.Handle("/auth/verify", Middleware(http.HandlerFunc(auth.Verify)))
+	mux.Handle("/auth/logout", Middleware(http.HandlerFunc(auth.InvaidateCookie)))
+
+	log.Fatal(http.ListenAndServe(":3001", mux))
+}
+
+func main() {
+	handleRequest()
+}
+
+
 func Middleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		origin := r.Header.Get("Origin")
@@ -33,18 +49,4 @@ func EnableCors(w *http.ResponseWriter, origin string) {
 	(*w).Header().Set("Access-Control-Allow-credentials", "true")
 	(*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	(*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-}
-
-func handleRequest() {
-	mux := http.NewServeMux()
-
-	mux.HandleFunc("/oauth/redirect", github.HandleOAuthRedirect)
-	mux.HandleFunc("/ping", ping)
-	mux.Handle("/auth/verify", Middleware(http.HandlerFunc(auth.Verify)))
-
-	log.Fatal(http.ListenAndServe(":3001", mux))
-}
-
-func main() {
-	handleRequest()
 }
