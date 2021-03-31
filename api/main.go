@@ -23,7 +23,7 @@ func handleRequest() {
 	mux.HandleFunc("/oauth/redirect", github.HandleOAuthRedirect)
 	mux.HandleFunc("/ping", ping)
 	mux.Handle("/auth/verify", Middleware(http.HandlerFunc(auth.Verify)))
-	mux.Handle("/auth/logout", Middleware(http.HandlerFunc(auth.LogOut)))
+	mux.Handle("/auth/logout", Middleware(http.HandlerFunc(auth.InvaidateCookie)))
 
 	log.Fatal(http.ListenAndServe(":3001", mux))
 }
