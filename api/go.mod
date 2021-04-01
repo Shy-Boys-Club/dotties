@@ -13,6 +13,6 @@ require (
 	github.com/sam-lane/loki v0.0.0-20210125151534-3d24d568d79e
 	golang.org/x/oauth2 v0.0.0-20210323180902-22b0adad7558
 	golang.org/x/text v0.3.5 // indirect
-	gorm.io/driver/postgres v1.0.8 // indirect
-	gorm.io/gorm v1.21.6 // indirect
+	gorm.io/driver/postgres v1.0.8
+	gorm.io/gorm v1.21.6
 )
