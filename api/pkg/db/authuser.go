@@ -5,7 +5,7 @@ import (
 )
 
 type AuthUser struct {
-	ID                 uint64 `gorm:"primaryKey"`
+	ID                 uint64 `gorm:"primary_key"`
 	GithubUsername     string `json:"github_username"`
 	GithubAccessToken  string `json:"github_access_token"`
 	GithubRefreshToken string `json:"github_refresh_token"`
