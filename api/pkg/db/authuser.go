@@ -20,18 +20,10 @@ func (u *AuthUser) SetActive() {
 	u.LastActive = time.Now().Unix()
 }
 
-func (u *AuthUser) SetAdmin() {
-	u.Admin = true
+func (u *AuthUser) SetAdmin(admin bool) {
+	u.Admin = admin
 }
 
-func (u *AuthUser) UnsetAdmin() {
-	u.Admin = false
-}
-
-func (u *AuthUser) SetMod() {
-	u.Mod = true
-}
-
-func (u *AuthUser) UnsetMod() {
-	u.Mod = false
+func (u *AuthUser) SetMod(mod bool) {
+	u.Mod = mod
 }

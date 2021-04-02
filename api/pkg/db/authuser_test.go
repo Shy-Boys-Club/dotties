@@ -13,7 +13,7 @@ func TestSetActiveIsSet(t *testing.T) {
 
 func TestSetAdmin(t *testing.T) {
 	user := AuthUser{}
-	user.SetAdmin()
+	user.SetAdmin(true)
 
 	if !user.Admin {
 		t.Errorf("expecting user to be admin got false")
@@ -25,7 +25,7 @@ func TestUnsetAdmin(t *testing.T) {
 		Admin: true,
 	}
 
-	user.UnsetAdmin()
+	user.SetAdmin(false)
 	if user.Admin {
 		t.Errorf("expecting user to NOT be admin but got true")
 	}
@@ -33,7 +33,7 @@ func TestUnsetAdmin(t *testing.T) {
 
 func TestSetMod(t *testing.T) {
 	user := AuthUser{}
-	user.SetMod()
+	user.SetMod(true)
 
 	if !user.Mod {
 		t.Errorf("expecting user to be mod got false")
@@ -45,7 +45,7 @@ func TestUnsetMod(t *testing.T) {
 		Mod: true,
 	}
 
-	user.UnsetMod()
+	user.SetMod(false)
 	if user.Mod {
 		t.Errorf("expecting user to NOT be mod but got true")
 	}
