@@ -8,6 +8,7 @@ import (
 	"github.com/Shy-Boys-Club/dotties/api/pkg/auth"
 	"github.com/Shy-Boys-Club/dotties/api/pkg/db"
 	"github.com/Shy-Boys-Club/dotties/api/pkg/github"
+	"github.com/Shy-Boys-Club/dotties/api/pkg/user"
 )
 
 func helloWorld(writer http.ResponseWriter, r *http.Request) {
@@ -17,9 +18,9 @@ func helloWorld(writer http.ResponseWriter, r *http.Request) {
 func ping(writer http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(writer, "Pong")
 
-    var users []db.AuthUser
-    var repositories []db.Repository
-    var images []db.Image
+	var users []db.AuthUser
+	var repositories []db.Repository
+	var images []db.Image
 
 	dbCon := db.GetDB()
 
@@ -27,14 +28,16 @@ func ping(writer http.ResponseWriter, r *http.Request) {
 	dbCon.Find(&repositories)
 	dbCon.Find(&images)
 
-    fmt.Println(users)
-    fmt.Println(repositories)
-    fmt.Println(images)
+	fmt.Println(users)
+	fmt.Println(repositories)
+	fmt.Println(images)
 }
 
 func handleRequest() {
 	mux := http.NewServeMux()
 
+	mux.HandleFunc("/user", user.GetCurrentUser)
+	mux.HandleFunc("/user/", user.GetUser)
 	mux.HandleFunc("/oauth/redirect", github.HandleOAuthRedirect)
 	mux.HandleFunc("/ping", ping)
 	mux.Handle("/auth/verify", Middleware(http.HandlerFunc(auth.Verify)))

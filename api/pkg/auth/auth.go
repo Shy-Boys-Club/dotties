@@ -47,13 +47,13 @@ func (j *JwtHandler) GenerateToken(c Claims) (string, error) {
 }
 
 //InvaidateCookie is used to sign a user out by setting the exp time to 0
-func InvaidateCookie(writer http.ResponseWriter, r *http.Request ) {
-    expiryTime := time.Now().AddDate(0,0,-1)
+func InvaidateCookie(writer http.ResponseWriter, r *http.Request) {
+	expiryTime := time.Now().AddDate(0, 0, -1)
 	http.SetCookie(writer, &http.Cookie{
-		Name:  "dottie-token",
-		Value: "",
-		Path:  "/",
-        Expires: expiryTime,
+		Name:    "dottie-token",
+		Value:   "",
+		Path:    "/",
+		Expires: expiryTime,
 	})
 }
 
@@ -61,7 +61,7 @@ func Verify(writer http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("dottie-token")
 	if err != nil {
 		// Cookie not found
-        fmt.Fprintf(writer, "{}");
+		fmt.Fprintf(writer, "{}")
 		return
 	}
 	// TODO: Refresh token
@@ -76,8 +76,8 @@ func Verify(writer http.ResponseWriter, r *http.Request) {
 	jsonData, err := json.Marshal(userData)
 	if err != nil {
 		fmt.Println(err)
-        fmt.Fprintf(writer, "{}");
-        return;
+		fmt.Fprintf(writer, "{}")
+		return
 	}
 	fmt.Fprintf(writer, string(jsonData))
 }
@@ -90,6 +90,10 @@ func ReadJWT(tokenString *string) *jwt.Token {
 		return nil
 	}
 	return token
+}
+
+func GetClaims(t *jwt.Token) map[string]interface{} {
+	return t.Claims.(jwt.MapClaims)
 }
 
 func (j *JwtHandler) TokenHasClaims(t *string, c *Claims) bool {

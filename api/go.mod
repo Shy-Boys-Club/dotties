@@ -7,6 +7,7 @@ require (
 	github.com/fatih/structs v1.1.0
 	github.com/google/go-github v17.0.0+incompatible // indirect
 	github.com/google/go-github/v34 v34.0.0
+	github.com/google/uuid v1.0.0
 	github.com/jackc/pgproto3/v2 v2.0.7 // indirect
 	github.com/jackc/pgx/v4 v4.11.0 // indirect
 	github.com/rs/cors v1.7.0 // indirect
