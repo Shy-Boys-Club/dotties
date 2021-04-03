@@ -34,7 +34,7 @@ class DottiesFileGenerator extends LitElement {
     render() {
         return html`
 
-            <input @change=${this.onInputChange} type="text" name="repository" placeholder="e.g. Matsuuu/dotfiles">
+            <input @change=${this.onInputChange} type="text" name="repository" placeholder="e.g. Matsuuu/dotfiles" value="Matsuuu/dotfile">
             <button>Fetch repository information</button>
 
             <file-tree .tree=${this.fileTree}></file-tree>
