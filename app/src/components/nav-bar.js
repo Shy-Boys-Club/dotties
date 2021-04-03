@@ -29,24 +29,14 @@ class NavBar extends LitElement {
         ];
 
         this.dropdownActions = [
-            { title: 'Profile', action: this.getProfilePage.bind(this), requiresLogin: false },
-            { title: 'Settings', action: this.getSettingsPage.bind(this), requiresLogin: true },
+            { title: 'Profile', action: '/user', requiresLogin: false },
+            { title: 'Settings', action: '/settings', requiresLogin: true },
             { title: 'Log out', action: this.logout.bind(this), requiresLogin: true },
         ];
         this.dropdownOpen = false;
     }
 
     firstUpdated() { }
-
-    getProfilePage() {
-        this.dropdownOpen = false;
-        changeView('/profile');
-    }
-
-    getSettingsPage() {
-        this.dropdownOpen = false;
-        changeView('/settings');
-    }
 
     logout() {
         this.dropdownOpen = false;
@@ -71,17 +61,28 @@ class NavBar extends LitElement {
         const isLoggedIn = this.userData != undefined;
         return html`
             <div class="dropdown" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-                ${this.dropdownActions.map(
-            ddaction => {
-                if (ddaction.requiresLogin && !isLoggedIn) return '';
-                return html`
+                ${this.dropdownActions.map(ddaction => {
+            if (ddaction.requiresLogin && !isLoggedIn) return '';
+            return html`
                         <div class="dropdown-item" role="none">
-                            <button class="" role="menuitem" @click=${ddaction.action}>
-                                ${ddaction.title}
-                            </button>
+                            ${typeof ddaction.action === 'function'
+                    ? html`
+                                      <button role="menuitem" @click=${ddaction.action}>
+                                          ${ddaction.title}
+                                      </button>
+                                  `
+                    : html`
+                                      <a
+                                          role="menuitem"
+                                          @click=${() => (this.dropdownOpen = false)}
+                                          href=${ddaction.action}
+                                      >
+                                          ${ddaction.title}
+                                      </a>
+                                  `}
                         </div>
-                    `}
-        )}
+                    `;
+        })}
             </div>
         `;
     }

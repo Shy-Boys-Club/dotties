@@ -6,9 +6,16 @@ const routes = [
         import: () => import('./dotties-app.js'),
     },
     {
-        path: 'profile',
+        path: 'user',
         component: 'profile-view',
         import: () => import('./views/profile.js'),
+        routes: [
+            {
+                path: ":username",
+                component: "profile-view",
+                import: () => import('./views/profile.js')
+            }
+        ]
     },
     {
         path: 'settings',
