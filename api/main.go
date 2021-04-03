@@ -6,8 +6,8 @@ import (
 	"net/http"
 
 	"github.com/Shy-Boys-Club/dotties/api/pkg/auth"
-	"github.com/Shy-Boys-Club/dotties/api/pkg/github"
 	"github.com/Shy-Boys-Club/dotties/api/pkg/db"
+	"github.com/Shy-Boys-Club/dotties/api/pkg/github"
 )
 
 func helloWorld(writer http.ResponseWriter, r *http.Request) {
@@ -16,7 +16,20 @@ func helloWorld(writer http.ResponseWriter, r *http.Request) {
 
 func ping(writer http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(writer, "Pong")
-    db.TestDB()
+
+    var users []db.AuthUser
+    var repositories []db.Repository
+    var images []db.Image
+
+	dbCon := db.GetDB()
+
+	dbCon.Find(&users)
+	dbCon.Find(&repositories)
+	dbCon.Find(&images)
+
+    fmt.Println(users)
+    fmt.Println(repositories)
+    fmt.Println(images)
 }
 
 func handleRequest() {
@@ -31,9 +44,10 @@ func handleRequest() {
 }
 
 func main() {
+	db.Migrate()
+
 	handleRequest()
 }
-
 
 func Middleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

@@ -3,4 +3,5 @@ api/gin-bin
 .env_db
 .idea/
 __pycache__/
+.vimspector.json
 
