@@ -42,6 +42,7 @@ func HandleOAuthRedirect(w http.ResponseWriter, r *http.Request) {
 	t, err := getTokenFromGB(code)
 	log.Debug("Access token: " + t.AccessToken)
 	if err != nil {
+		log.Error(err.Error())
 		w.WriteHeader(http.StatusNotAcceptable)
 		w.Write([]byte(`{"error": "failed to authenicate with Github"}`))
 		return
@@ -54,7 +55,7 @@ func HandleOAuthRedirect(w http.ResponseWriter, r *http.Request) {
 	}
 
 	conn := db.GetDB()
-	dbUser := db.AuthUser{GithubUsername: *u.User.Name}
+	dbUser := db.AuthUser{GithubUsername: *u.User.Login}
 
 	res := conn.Find(&dbUser)
 	if res.RowsAffected == 0 {
@@ -130,6 +131,8 @@ func getTokenFromGB(code string) (GithubAccessResponse, error) {
 	t := GithubAccessResponse{}
 	json.NewDecoder(r.Body).Decode(&t)
 	if len(t.AccessToken) <= 0 {
+		fmt.Println("FAILED TO PARSE JSON")
+		fmt.Println(r.Body)
 		return t, fmt.Errorf("Failed to parse json repsonse from GitHub: %v", err)
 	}
 
