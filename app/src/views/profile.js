@@ -38,6 +38,7 @@ class ProfileView extends LitElement {
             username: 'Matsuuu',
             repositories: [{ id: 123, name: 'Matsuuu/dotfiles' }],
         };
+        this.user = null;
         if (this.user) {
             await this.getGithubUserInformation(this.user.username);
         }
@@ -65,7 +66,13 @@ class ProfileView extends LitElement {
         return html` ${this.userInfoInitialized && this.user ? this.renderUserProfile() : this.renderLogin()} `;
     }
     renderLogin() {
-        return html` <github-signin></github-signin> `;
+        return html`
+            <div class="sign-in-page">
+                <h2>Please log in to Dotties to view your profile page</h2>
+
+                <github-signin></github-signin>
+            </div>
+        `;
     }
     renderUserProfile() {
         return html`
@@ -76,7 +83,9 @@ class ProfileView extends LitElement {
                 <label>Username</label>
                 <h3>${this.user.username}</h3>
                 <span class="socials">
-                    <a href="https://twitter.com/${this.user.twitter_username}" target="_blank"><icon-svg path=${twitter}></icon-svg></a>
+                    <a href="https://twitter.com/${this.user.twitter_username}" target="_blank"
+                        ><icon-svg path=${twitter}></icon-svg
+                    ></a>
                     <a href=${this.user.html_url} target="_blank"><icon-svg path=${github}></icon-svg></a>
                 </span>
 
@@ -102,6 +111,13 @@ class ProfileView extends LitElement {
                     box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14),
                         0px 1px 8px 0px rgba(0, 0, 0, 0.12);
                     padding: 2rem 0;
+                }
+
+                .sign-in-page {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    width: 100%;
                 }
 
                 .profile-picture {

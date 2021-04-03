@@ -1,4 +1,5 @@
 import { css, html, LitElement } from 'lit-element';
+import { github } from '../icons/social';
 
 const clientID = '4cdb63b7fafee549f81d';
 const redirectURI = 'http://127.0.0.1:3000/oauth/redirect';
@@ -9,14 +10,19 @@ class GithubSignin extends LitElement {
             <a
                 class="github-login-button"
                 href="https://github.com/login/oauth/authorize?client_id=${clientID}&redirect_uri=${redirectURI}"
-                ><span>Sign in with Github</span> <img src="/assets/GitHub-Mark-64px.png" /></a
-            >
+                ><span>Sign in with Github</span>
+                <icon-svg path=${github}></icon-svg>
+            </a>
         `;
     }
 
     static get styles() {
         return [
             css`
+                :host {
+                    width: fit-content;
+                }
+
                 .github-login-button {
                     color: #000;
                     text-decoration: none;
@@ -29,11 +35,10 @@ class GithubSignin extends LitElement {
                     align-items: center;
                 }
 
-            img {
-                margin-top: -3px;
-                width: 32px;
-                padding-left: 16px;
-            }
+                icon-svg {
+                    width: 32px;
+                    padding-left: 16px;
+                }
             `,
         ];
     }
