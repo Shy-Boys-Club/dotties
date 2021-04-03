@@ -38,7 +38,6 @@ class ProfileView extends LitElement {
             username: 'Matsuuu',
             repositories: [{ id: 123, name: 'Matsuuu/dotfiles' }],
         };
-        this.user = null;
         if (this.user) {
             await this.getGithubUserInformation(this.user.username);
         }
@@ -89,7 +88,10 @@ class ProfileView extends LitElement {
                     <a href=${this.user.html_url} target="_blank"><icon-svg path=${github}></icon-svg></a>
                 </span>
 
-                <h3>Repositories</h3>
+                <span class="repositories">
+                    <h3>Repositories</h3>
+                    <a href="/gallery/new">Add a repository</a>
+                </span>
                 <p>This will be replaced with similiar cards as the gallery page will have</p>
                 ${this.user.repositories.map(repo => html` <a href="/gallery/${repo.name}">${repo.name}</a> `)}
             </div>
@@ -157,6 +159,21 @@ class ProfileView extends LitElement {
 
                 span.socials a {
                     padding-right: 1rem;
+                }
+
+                span.repositories {
+                    display: flex;
+                }
+
+                span.repositories a {
+                    border: 2px solid #fff;
+                    background: none;
+                    color: #fff;
+                    font-size: 24px;
+                    cursor: pointer;
+                    text-decoration: none;
+                    display: flex;
+                    align-items: center;
                 }
 
                 icon-svg {

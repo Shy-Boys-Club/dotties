@@ -1,4 +1,4 @@
-const GITHUB_API_BASE = `https://api.github.com/repos/REPO_NAME/contents/`;
+const GITHUB_API_BASE = `https://api.github.com`;
 const GITHUB_REPO_BASE = `https://github.com/REPO_NAME/blob/`
 const GITHUB_DOWNLOAD_BASE = `https://raw.githubusercontent.com/REPO_NAME/master/`
 
@@ -21,4 +21,23 @@ export async function getDotfiles(repoName) {
     }
 
     return dotfileInfo;
+}
+
+
+/**
+ * @param {string} repoName
+ */
+export async function getRepositoryInformation(repoName) {
+    const repositoryUrl = GITHUB_API_BASE + "/repos/" + repoName;
+    const repositoryData = await fetch(repositoryUrl).then(res => res.json());
+    const defaultBranch = repositoryData.default_branch;
+
+    const branchesUrl = repositoryData.branches_url.replace("{/branch}", "/" + defaultBranch);
+    const branchData = await fetch(branchesUrl).then(res => res.json());
+
+    const latestCommitSha = branchData.commit.sha;
+    const fileTreeUrl = GITHUB_API_BASE + "/repos/" + repoName + "/git/trees/" + latestCommitSha + "?recursive=true"
+    const fileTreeData = await fetch(fileTreeUrl).then(res => res.json());
+
+    return fileTreeData.tree;
 }
