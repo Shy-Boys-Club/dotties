@@ -2,6 +2,8 @@ import { LitElement, html, css } from 'lit-element';
 import '../components/github-signin';
 import { getGithubUser } from '../services/github-user-service';
 import { getLoggedUser, getUser } from '../services/user-service';
+import '../components/icon';
+import { github, twitter } from '../icons/social';
 
 class ProfileView extends LitElement {
     static get properties() {
@@ -33,9 +35,8 @@ class ProfileView extends LitElement {
         }
         // TODO: Delete Mock
         this.user = {
-            username: 'Matsuuu', repositories: [
-                { id: 123, name: "Matsuuu/dotfiles" }
-            ]
+            username: 'Matsuuu',
+            repositories: [{ id: 123, name: 'Matsuuu/dotfiles' }],
         };
         if (this.user) {
             await this.getGithubUserInformation(this.user.username);
@@ -61,8 +62,7 @@ class ProfileView extends LitElement {
     }
 
     render() {
-        return html`<h2>Profile view</h2>
-            ${this.userInfoInitialized && this.user ? this.renderUserProfile() : this.renderLogin()} `;
+        return html` ${this.userInfoInitialized && this.user ? this.renderUserProfile() : this.renderLogin()} `;
     }
     renderLogin() {
         return html` <github-signin></github-signin> `;
@@ -71,14 +71,18 @@ class ProfileView extends LitElement {
         return html`
             <div class="profile-picture">
                 <img src=${this.user.avatar_url} />
+            </div>
+            <div class="profile-info">
+                <label>Username</label>
                 <h3>${this.user.username}</h3>
-                <a href="https://twitter.com/${this.user.twitter_username}" target="_blank">Twitter</a>
-                <a href=${this.user.html_url} target="_blank">GitHub</a>
+                <span class="socials">
+                    <a href="https://twitter.com/${this.user.twitter_username}" target="_blank"><icon-svg path=${twitter}></icon-svg></a>
+                    <a href=${this.user.html_url} target="_blank"><icon-svg path=${github}></icon-svg></a>
+                </span>
 
                 <h3>Repositories</h3>
-                ${this.user.repositories.map(repo => html`
-                    <a href="/gallery/${repo.name}">${repo.name}</a>
-                `)}
+                <p>This will be replaced with similiar cards as the gallery page will have</p>
+                ${this.user.repositories.map(repo => html` <a href="/gallery/${repo.name}">${repo.name}</a> `)}
             </div>
         `;
     }
@@ -87,17 +91,62 @@ class ProfileView extends LitElement {
         return [
             css`
                 :host {
-                    padding-top: 10%;
                     display: flex;
-                    flex-direction: column;
-                    align-items: center;
+                    width: 60%;
+                    max-width: 1000px;
+                    margin: 0 auto;
+                    background: rgb(31, 41, 54);
+                    margin-top: 7.5%;
+                    border-radius: 4px;
+                    overflow: hidden;
+                    box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14),
+                        0px 1px 8px 0px rgba(0, 0, 0, 0.12);
+                    padding: 2rem 0;
                 }
 
                 .profile-picture {
+                    width: 40%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
                 }
 
                 .profile-picture img {
-                    width: 100%;
+                    width: 90%;
+                    border-radius: 10%;
+                }
+
+                .profile-info {
+                    display: flex;
+                    flex-direction: column;
+                    height: 100%;
+                    width: 60%;
+                }
+
+                label {
+                    font-size: 1.4rem;
+                }
+
+                h3 {
+                    font-size: 1.6rem;
+                    margin: 0.5rem 0;
+                }
+
+                span {
+                }
+
+                span.socials {
+                    margin: 2rem 0;
+                }
+
+                span.socials a {
+                    padding-right: 1rem;
+                }
+
+                icon-svg {
+                    height: 48px;
+                    width: 48px;
+                    fill: #fff;
                 }
 
                 a {
