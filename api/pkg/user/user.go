@@ -3,10 +3,12 @@ package user
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/Shy-Boys-Club/dotties/api/pkg/auth"
-	"github.com/Shy-Boys-Club/dotties/api/pkg/db"
 	"net/http"
 	"strings"
+
+	"github.com/Shy-Boys-Club/dotties/api/pkg/auth"
+	"github.com/Shy-Boys-Club/dotties/api/pkg/db"
+	"gorm.io/gorm/clause"
 )
 
 func GetCurrentUser(w http.ResponseWriter, r *http.Request) {
@@ -23,7 +25,7 @@ func GetCurrentUser(w http.ResponseWriter, r *http.Request) {
 	user := db.AuthUser{
 		GithubUsername: claims["UserName"].(string),
 	}
-	dbCon.Find(&user)
+	dbCon.Preload(clause.Associations).Find(&user)
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(user)
 }
@@ -37,7 +39,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	res := dbCon.Find(&user)
+	res := dbCon.Preload(clause.Associations).Find(&user)
 	if res.RowsAffected == 0 {
 		fmt.Fprintf(w, "{}")
 		return
