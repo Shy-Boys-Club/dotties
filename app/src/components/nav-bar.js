@@ -139,6 +139,7 @@ class NavBar extends LitElement {
                     display: flex;
                     background: #1f2936;
                     flex-direction: column;
+                    width: max-content;
                 }
 
                 .dropdown-item {
@@ -146,7 +147,8 @@ class NavBar extends LitElement {
                     cursor: pointer;
                 }
 
-                .dropdown-item button {
+            .dropdown-item button,
+            .dropdown-item a {
                     font-size: 1.4rem;
                     background: none;
                     color: inherit;

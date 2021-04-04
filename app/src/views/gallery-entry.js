@@ -14,7 +14,7 @@ class GalleryEntryView extends LitElement {
     constructor() {
         super();
         this.dotfiles = {};
-        this.username = 'Matsuuu';
+        this.username = '';
         this.repository = 'Matsuuu/dotfiles';
     }
 
