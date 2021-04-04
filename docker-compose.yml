@@ -33,6 +33,10 @@ services:
     env_file:
       - db/.env_db
       - .env
+    environment:
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_USER=root
+      - POSTGRES_DB=dotties-dev
 
   migration:
     build:

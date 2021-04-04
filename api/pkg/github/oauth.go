@@ -8,6 +8,8 @@ import (
 	"time"
 
 	"github.com/Shy-Boys-Club/dotties/api/pkg/auth"
+	"github.com/Shy-Boys-Club/dotties/api/pkg/db"
+	"github.com/google/uuid"
 	"github.com/sam-lane/loki"
 )
 
@@ -40,6 +42,7 @@ func HandleOAuthRedirect(w http.ResponseWriter, r *http.Request) {
 	t, err := getTokenFromGB(code)
 	log.Debug("Access token: " + t.AccessToken)
 	if err != nil {
+		log.Error(err.Error())
 		w.WriteHeader(http.StatusNotAcceptable)
 		w.Write([]byte(`{"error": "failed to authenicate with Github"}`))
 		return
@@ -49,6 +52,28 @@ func HandleOAuthRedirect(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Error(err.Error())
 		return
+	}
+
+	conn := db.GetDB()
+	dbUser := db.AuthUser{GithubUsername: *u.User.Login}
+
+	res := conn.Find(&dbUser)
+	if res.RowsAffected == 0 {
+		//user doesn't exist commit them to database
+		newUser := db.AuthUser{
+			GithubUsername:     *u.User.Login,
+			UUID:               uuid.New().String(),
+			GithubAccessToken:  t.AccessToken,
+			GithubRefreshToken: "",
+			Email:              *u.User.Email,
+			GithubAvatar:       *u.User.AvatarURL,
+			GithubURL:          *u.User.HTMLURL,
+			LastActive:         time.Now(),
+		}
+		conn.Create(&newUser)
+	} else {
+		//TODO
+		//update last active
 	}
 
 	j := auth.JwtHandler{
@@ -64,12 +89,12 @@ func HandleOAuthRedirect(w http.ResponseWriter, r *http.Request) {
 		Mod:       false,
 	})
 
-    expiryTime := time.Now().Local().Add(time.Minute * time.Duration(j.Expiration))
+	expiryTime := time.Now().Local().Add(time.Minute * time.Duration(j.Expiration))
 	http.SetCookie(w, &http.Cookie{
-		Name:  "dottie-token",
-		Value: jwt,
-		Path:  "/",
-        Expires: expiryTime,
+		Name:    "dottie-token",
+		Value:   jwt,
+		Path:    "/",
+		Expires: expiryTime,
 	})
 
 	http.Redirect(w, r, "http://127.0.0.1:8000", http.StatusTemporaryRedirect)
@@ -106,6 +131,8 @@ func getTokenFromGB(code string) (GithubAccessResponse, error) {
 	t := GithubAccessResponse{}
 	json.NewDecoder(r.Body).Decode(&t)
 	if len(t.AccessToken) <= 0 {
+		fmt.Println("FAILED TO PARSE JSON")
+		fmt.Println(r.Body)
 		return t, fmt.Errorf("Failed to parse json repsonse from GitHub: %v", err)
 	}
 
