@@ -11,7 +11,6 @@ class RepositoryAddView extends LitElement {
 
     render() {
         return html`
-            <h2>Add a repository</h2>
             <dotties-file-generator></dotties-file-generator>
         `;
     }
@@ -21,7 +20,7 @@ class RepositoryAddView extends LitElement {
 
             :host {
                 display: flex;
-                width: 60%;
+                width: 80%;
                 margin: 10% auto;
                 flex-direction: column;
             }

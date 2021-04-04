@@ -28,16 +28,20 @@ export async function getDotfiles(repoName) {
  * @param {string} repoName
  */
 export async function getRepositoryInformation(repoName) {
-    const repositoryUrl = GITHUB_API_BASE + "/repos/" + repoName;
-    const repositoryData = await fetch(repositoryUrl).then(res => res.json());
-    const defaultBranch = repositoryData.default_branch;
+    try {
+        const repositoryUrl = GITHUB_API_BASE + "/repos/" + repoName;
+        const repositoryData = await fetch(repositoryUrl).then(res => res.json());
+        const defaultBranch = repositoryData.default_branch;
 
-    const branchesUrl = repositoryData.branches_url.replace("{/branch}", "/" + defaultBranch);
-    const branchData = await fetch(branchesUrl).then(res => res.json());
+        const branchesUrl = repositoryData.branches_url.replace("{/branch}", "/" + defaultBranch);
+        const branchData = await fetch(branchesUrl).then(res => res.json());
 
-    const latestCommitSha = branchData.commit.sha;
-    const fileTreeUrl = GITHUB_API_BASE + "/repos/" + repoName + "/git/trees/" + latestCommitSha + "?recursive=true"
-    const fileTreeData = await fetch(fileTreeUrl).then(res => res.json());
+        const latestCommitSha = branchData.commit.sha;
+        const fileTreeUrl = GITHUB_API_BASE + "/repos/" + repoName + "/git/trees/" + latestCommitSha + "?recursive=true"
+        const fileTreeData = await fetch(fileTreeUrl).then(res => res.json());
 
-    return fileTreeData.tree;
+        return fileTreeData.tree;
+    } catch (err) {
+        return null;
+    }
 }

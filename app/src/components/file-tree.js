@@ -1,4 +1,5 @@
 import { css, html, LitElement } from 'lit-element';
+import { repeat } from 'lit-html/directives/repeat';
 import './icon';
 import { fileIcon, folderIcon } from '../icons/file-tree-icons';
 
@@ -7,6 +8,7 @@ class FileTree extends LitElement {
         return {
             tree: { type: Array },
             parsedTree: { type: Array },
+            selectedFiles: { type: Array },
         };
     }
 
@@ -14,6 +16,7 @@ class FileTree extends LitElement {
         super();
         this.tree = [];
         this.parsedTree = [];
+        this.selectedFiles = [];
     }
 
     updated(_changedProperties) {
@@ -27,7 +30,6 @@ class FileTree extends LitElement {
         const tree = [...this.tree];
 
         for (const branch of tree) {
-            console.log(branch);
             const isInFolder = branch.path.includes('/');
 
             if (isInFolder) {
@@ -44,9 +46,7 @@ class FileTree extends LitElement {
         }
 
         this.parsedTree = parsedTree;
-        console.log(this.parsedTree);
         this.requestUpdate();
-        // TODO: Implement rendering of file tree and actions on items in tree
     }
 
     findFolderInTree(tree, folder) {
@@ -60,26 +60,67 @@ class FileTree extends LitElement {
         return tree.find(b => b.path === folder);
     }
 
+    onFileSelect(e) {
+        let target = e.target;
+        const path = e.path || (e.composedPath && e.composedPath());
+        while (target.className !== "tree-row") {
+            target = path.shift();
+        }
+        if (target.hasAttribute('is-folder')) return;
+
+        const isSelected = target.hasAttribute('selected');
+        const filepath = target.dataset.filePath;
+        const filename = filepath.split('/').pop();
+
+        if (isSelected) {
+            this.selectedFiles = this.selectedFiles.filter(file => file.filepath !== filepath);
+            target.removeAttribute('selected');
+        } else {
+            this.selectedFiles.push({ filepath, filename });
+            target.setAttribute('selected', '');
+            this.requestUpdate();
+        }
+
+        this.dispatchEvent(new CustomEvent('file-selected', { detail: { selectedFiles: this.selectedFiles } }));
+    }
+
     renderTree() {
-        return html` ${this.parsedTree.map(branch => this.renderBranch(branch))} `;
+        return html`${repeat(
+            this.parsedTree,
+            branch => branch.path,
+            branch => this.renderBranch(branch),
+        )}`;
     }
 
     renderBranch(branch) {
-        console.log(branch);
         const splitPath = branch.path.split('/');
+        const spacers = this.getSpacers(splitPath);
+        const icon = this.getBranchIcon(branch);
+
+        return html`<div
+                class="tree-row"
+                @click=${this.onFileSelect}
+                data-file-path=${branch.path}
+                ?is-folder=${branch.type === 'tree'}
+            >
+                ${spacers} ${icon}
+                <p>${splitPath[splitPath.length - 1]}</p>
+            </div>
+            ${branch.files ? branch.files.map(b => this.renderBranch(b)) : ''}`;
+    }
+
+    getSpacers(splitPath) {
         let spacers = html``;
         for (let i = 0; i < splitPath.length - 1; i++) {
             spacers = html`${spacers}<span class="spacer"></span>`;
         }
-        const icon =
-            branch.type === 'tree'
-                ? html`<icon-svg path=${folderIcon}></icon-svg>`
-                : html`<icon-svg path=${fileIcon}></icon-svg>`;
-        return html`<div class="tree-row">
-                ${spacers} ${icon}
-                <p>${splitPath[splitPath.length - 1]}</p>
-            </div>
-            ${branch.files ? branch.files.map(b => this.renderBranch(b)) : ''} `;
+        return spacers;
+    }
+
+    getBranchIcon(branch) {
+        return branch.type === 'tree'
+            ? html`<icon-svg path=${folderIcon}></icon-svg>`
+            : html`<icon-svg path=${fileIcon}></icon-svg>`;
     }
 
     render() {
@@ -101,6 +142,14 @@ class FileTree extends LitElement {
                 background: #292c31;
                 border: 1px solid rgba(224, 224, 224, 1);
                 cursor: pointer;
+            }
+
+            .tree-row[selected] {
+                background: #3c7c3f;
+            }
+
+            .tree-row[selected]:hover {
+                background: #366f38;
             }
 
             .tree-row:hover {
