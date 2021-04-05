@@ -34,12 +34,12 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 	userPath := strings.TrimPrefix(r.URL.Path, "/user/")
 	dbCon := db.GetDB()
 
-	user := db.AuthUser{
-		GithubUsername: userPath,
-	}
+	user := db.AuthUser{}
 
 	w.Header().Set("Content-Type", "application/json")
-	res := dbCon.Preload(clause.Associations).Find(&user)
+    res := dbCon.Preload(clause.Associations).Find(&user, db.AuthUser{GithubUsername: userPath})
+    fmt.Println(res.RowsAffected)
+    fmt.Println(user)
 	if res.RowsAffected == 0 {
 		fmt.Fprintf(w, "{}")
 		return
