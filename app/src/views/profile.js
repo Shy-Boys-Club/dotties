@@ -64,11 +64,18 @@ class ProfileView extends LitElement {
         // If still loading info
         if (!this.userInfoInitialized) return html`<loading-animation></loading-animation>`;
         // If loaded other user info but no-one was found
-        if (this.userInfoInitialized && this.username && !this.userDataIsSet()) return html`<p>404</p>`;
+        if (this.userInfoInitialized && this.username && !this.userDataIsSet()) return this.render404();
+        return html` ${this.userDataIsSet() ? this.renderUserProfile() : this.renderLogin()} `;
+    }
+
+    render404() {
         return html`
-            ${this.userDataIsSet() ? this.renderUserProfile() : this.renderLogin()}
+            <div class="not-found">
+                <h2>User could not be found</h2>
+            </div>
         `;
     }
+
     renderLogin() {
         return html`
             <div class="sign-in-page">
@@ -78,6 +85,7 @@ class ProfileView extends LitElement {
             </div>
         `;
     }
+
     renderUserProfile() {
         return html`
             <div class="profile-picture">
@@ -124,6 +132,13 @@ class ProfileView extends LitElement {
                     box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14),
                         0px 1px 8px 0px rgba(0, 0, 0, 0.12);
                     padding: 2rem 0;
+                }
+
+                .not-found {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 100%;
                 }
 
                 .sign-in-page {
