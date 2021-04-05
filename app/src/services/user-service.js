@@ -6,7 +6,18 @@ const apiEndpoint = "/user";
  * @param {string} username
  */
 export function getUser(username) {
-    return fetch(API_URL + apiEndpoint + "/" + username).then(res => res.json());
+    return fetch(API_URL + apiEndpoint + "/" + username)
+        .then(res => {
+            if (res.status === 404) {
+                throw Error("User not found");
+            }
+            return res;
+        })
+        .then(res => res.json())
+        .catch(err => {
+            console.error(err);
+            return {};
+        });
 }
 
 export function getLoggedUser() {
