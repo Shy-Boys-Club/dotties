@@ -16,6 +16,7 @@ class LoadingAnimation extends LitElement {
         return css`
             :host {
                 display: flex;
+                width: 100%;
                 align-items: center;
                 justify-content: center;
             }

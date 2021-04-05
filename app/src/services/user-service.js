@@ -10,7 +10,9 @@ export function getUser(username) {
 }
 
 export function getLoggedUser() {
-    return fetch(API_URL + apiEndpoint).then(res => res.json());
+    return fetch(API_URL + apiEndpoint, {
+        credentials: "include"
+    }).then(res => res.json());
 }
 
 /**

@@ -3,7 +3,7 @@ import { API_URL } from "../util/api-util";
 
 export function logOut() {
     fetch(API_URL + "/auth/logout", { credentials: "include" });
-    window.location.reload();
+    window.location.pathname = "/";
 }
 
 export async function verifyAndSetUserdata() {

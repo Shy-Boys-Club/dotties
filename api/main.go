@@ -11,6 +11,8 @@ import (
 	"github.com/Shy-Boys-Club/dotties/api/pkg/user"
 )
 
+type ApiRequest func (w http.ResponseWriter, r *http.Request)
+
 func helloWorld(writer http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(writer, `{"hello": "world hello"}`)
 }
@@ -36,14 +38,18 @@ func ping(writer http.ResponseWriter, r *http.Request) {
 func handleRequest() {
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("/user", user.GetCurrentUser)
-	mux.HandleFunc("/user/", user.GetUser)
+	mux.Handle("/user", wrap(user.GetCurrentUser))
+	mux.Handle("/user/", wrap(user.GetUser))
 	mux.HandleFunc("/oauth/redirect", github.HandleOAuthRedirect)
 	mux.HandleFunc("/ping", ping)
-	mux.Handle("/auth/verify", Middleware(http.HandlerFunc(auth.Verify)))
-	mux.Handle("/auth/logout", Middleware(http.HandlerFunc(auth.InvaidateCookie)))
+	mux.Handle("/auth/verify", wrap(auth.Verify))
+	mux.Handle("/auth/logout", wrap(auth.InvaidateCookie))
 
 	log.Fatal(http.ListenAndServe(":3001", mux))
+}
+
+func wrap(fn ApiRequest) http.Handler {
+    return Middleware(http.HandlerFunc(fn));
 }
 
 func main() {
