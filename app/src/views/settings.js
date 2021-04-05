@@ -1,5 +1,5 @@
 import { LitElement, html, css } from 'lit-element';
-import { getLoggedUser, updateUser } from '../services/user-service';
+import { deleteUser, getLoggedUser, updateUser } from '../services/user-service';
 import '../components/loading-animation';
 
 class SettingsView extends LitElement {
@@ -31,9 +31,13 @@ class SettingsView extends LitElement {
         const formData = new FormData(e.target);
 
         const updateObject = {
-            email_address: formData.get("email")
+            email_address: formData.get('email'),
         };
         updateUser(updateObject);
+    }
+
+    onDelete() {
+        deleteUser();
     }
 
     render() {
@@ -44,7 +48,9 @@ class SettingsView extends LitElement {
                 <label for="email">Email</label>
                 <input type="text" name="email" id="email" value="${this.user.email_address}" />
                 <input type="submit" value="Update information" />
-            </form> `;
+            </form>
+
+            <button @click=${this.onDelete} class="delete-button" type="button">DELETE USER</button> `;
     }
 
     static get styles() {
@@ -62,9 +68,25 @@ class SettingsView extends LitElement {
                 flex-direction: column;
             }
 
-        input[type='submit'] {
-            width: min-content;
-        }
+            input[type='submit'] {
+                width: min-content;
+            }
+
+            .delete-button {
+                background: red;
+                color: #fff;
+                font-size: 24px;
+                padding: 0.5rem 1rem;
+                cursor: pointer;
+                border: none;
+                margin-top: 4rem;
+                width: fit-content;
+                transition: 100ms ease-in-out;
+            }
+
+            .delete-button:hover {
+                background: darkred;
+            }
         `;
     }
 }

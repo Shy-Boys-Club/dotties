@@ -113,5 +113,13 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteUser(w http.ResponseWriter, r *http.Request) {
+    dbCon := db.GetDB()
+    user, err := GetLoggedInUser(w,r)
+    if err != nil {
+        fmt.Println("Not logged in")
+        w.WriteHeader(500)
+        return
+    }
 
+    dbCon.Delete(&user)
 }

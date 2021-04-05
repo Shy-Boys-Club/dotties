@@ -1,4 +1,5 @@
 import { API_URL } from "../util/api-util";
+import { logOut } from "./auth-service";
 
 const apiEndpoint = "/user";
 
@@ -37,9 +38,13 @@ export function updateUser(updateData) {
     })
 }
 
-export function deleteUser() {
-    return fetch(API_URL + apiEndpoint, {
+export async function deleteUser() {
+    const res = await fetch(API_URL + apiEndpoint, {
         method: "DELETE",
         credentials: "include"
     })
+
+    if (res.status === 200) {
+        logOut();
+    }
 }
