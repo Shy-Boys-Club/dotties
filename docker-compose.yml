@@ -1,4 +1,4 @@
-version: '3.5'
+version: "3.5"
 
 services:
   api:
@@ -11,7 +11,7 @@ services:
     env_file:
       - .env
     links:
-        - db
+      - db
 
   frontend:
     build:
@@ -23,31 +23,24 @@ services:
       - "/app/node_modules"
 
   db:
-    build:
-      context: db/local_db/.
+    image: postgres
     container_name: "postgres-dotties"
     ports:
       - "5432:5432"
-    volumes:
-      - db-dotties:/var/lib/postgresql/data
-    env_file:
-      - db/.env_db
-      - .env
     environment:
       - POSTGRES_PASSWORD=root
       - POSTGRES_USER=root
       - POSTGRES_DB=dotties-dev
 
-  migration:
-    build:
-      context: db/local_db/migration/.
-    container_name: "migration"
-    depends_on:
-      - db
-    env_file:
-      - db/.env_db
-  
 
-volumes:
-  db-dotties:
+        #migration:
+        #build:
+        #context: db/local_db/migration/.
+        #container_name: "migration"
+        #depends_on:
+        #- db
+        #env_file:
+        #- db/.env_db
 
+        #volumes:
+        #db-dotties:
