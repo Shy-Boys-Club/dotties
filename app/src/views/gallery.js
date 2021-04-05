@@ -20,7 +20,7 @@ class GalleryView extends LitElement {
         return html`
             <h2>Gallery</h2>
 
-            <a href="/gallery/Matsuuu">Matsuuu</a>
+            <a href="/gallery/Matsuuu/dotfiles">Matsuuu/dotfiles</a>
         `;
     }
 

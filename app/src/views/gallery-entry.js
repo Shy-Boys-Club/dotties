@@ -15,11 +15,11 @@ class GalleryEntryView extends LitElement {
         super();
         this.dotfiles = {};
         this.username = '';
-        this.repository = 'Matsuuu/dotfiles';
+        this.repository = '';
     }
 
     firstUpdated() {
-        getDotfiles(this.repository).then(dotfiles => {
+        getDotfiles(this.username + '/' + this.repository).then(dotfiles => {
             console.log(dotfiles);
             this.dotfiles = dotfiles;
         });
