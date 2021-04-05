@@ -4,12 +4,21 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/Shy-Boys-Club/dotties/api/pkg/auth"
 	"github.com/Shy-Boys-Club/dotties/api/pkg/db"
 	"gorm.io/gorm/clause"
 )
+
+func GetUser(w http.ResponseWriter, r *http.Request) {
+	usernameQuery := r.URL.Query()["username"]
+	if len(usernameQuery) < 1 {
+		GetCurrentUser(w, r)
+		return
+	}
+	username := usernameQuery[0]
+	GetUserByName(w, r, username)
+}
 
 func GetCurrentUser(w http.ResponseWriter, r *http.Request) {
 	dbCon := db.GetDB()
@@ -30,14 +39,12 @@ func GetCurrentUser(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(user)
 }
 
-func GetUser(w http.ResponseWriter, r *http.Request) {
-	userPath := strings.TrimPrefix(r.URL.Path, "/user/")
+func GetUserByName(w http.ResponseWriter, r *http.Request, username string) {
 	dbCon := db.GetDB()
-
 	user := db.AuthUser{}
 
 	w.Header().Set("Content-Type", "application/json")
-	res := dbCon.Preload(clause.Associations).Find(&user, db.AuthUser{GithubUsername: userPath})
+	res := dbCon.Preload(clause.Associations).Find(&user, db.AuthUser{GithubUsername: username})
 	if res.RowsAffected == 0 {
 		w.WriteHeader(404)
 		return
