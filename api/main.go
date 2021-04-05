@@ -38,7 +38,7 @@ func ping(writer http.ResponseWriter, r *http.Request) {
 func handleRequest() {
 	mux := http.NewServeMux()
 
-	mux.Handle("/user", wrap(user.GetUser))
+	mux.Handle("/user", wrap(user.HandleRequest))
 	mux.HandleFunc("/oauth/redirect", github.HandleOAuthRedirect)
 	mux.HandleFunc("/ping", ping)
 	mux.Handle("/auth/verify", wrap(auth.Verify))
@@ -53,7 +53,6 @@ func wrap(fn ApiRequest) http.Handler {
 
 func main() {
 	db.Migrate()
-
 	handleRequest()
 }
 
