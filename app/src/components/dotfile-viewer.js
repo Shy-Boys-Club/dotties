@@ -8,8 +8,8 @@ class DotfileViewer extends LitElement {
             title: { type: String },
             dotfile: { type: Object },
             content: { type: String },
-            contentHTML: { type: String },
             loading: { type: Boolean },
+            language: { type: String }
         };
     }
 
@@ -19,6 +19,7 @@ class DotfileViewer extends LitElement {
         this.content = '';
         this.contentHTML = '';
         this.loading = false;
+        this.language = "ini";
     }
 
     firstUpdated() { }
@@ -30,30 +31,37 @@ class DotfileViewer extends LitElement {
             .then(res => res.text())
             .then(res => {
                 this.content = res;
+                this.language = this.determineFiletype()
 
-                window.shiki.getHighlighter({ theme: 'github-dark' }).then(highlighter => {
-                    this.contentHTML = highlighter.codeToHtml(this.content, this.determineFiletype());
-                    this.loading = false;
+                window.requestAnimationFrame(() => {
+                    // @ts-ignore
+                    window.hljs.highlightElement(this.shadowRoot.querySelector("code"))
                 });
+                console.log(this.content);
+                this.loading = false;
             });
     }
 
     determineFiletype() {
         const filename = this.dotfile.download_url.split('/').pop();
-        console.log(filename);
         // Add checks from https://github.com/shikijs/shiki/blob/master/docs/languages.md#literal-values
-        if (filename.includes('vim')) return 'viml';
+        if (filename.includes('vim')) return 'vim';
         if (filename.includes('json')) return 'json';
-        if (filename.includes('bash')) return 'shellscript';
-        return 'ini';
+        if (filename.includes('bash')) return 'bash';
+        if (filename.includes('sh')) return 'sh';
+        if (filename.includes('zsh')) return 'zsh';
+        return 'properties';
     }
 
     render() {
         return html`
+            <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.2/styles/railscasts.min.css" />
             <details>
                 <summary @click=${this.getContent}>${this.title}</summary>
-                ${this.loading ? html`<loading-animation></loading-animation>` : ''} ${unsafeHTML(this.contentHTML)}
+                ${this.loading ? html`<loading-animation></loading-animation>` : ''}
+                <pre><code class="language-${this.language}">${this.content}</code></pre>
             </details>
+
         `;
     }
 
@@ -74,7 +82,8 @@ class DotfileViewer extends LitElement {
             }
 
             pre {
-                margin: 1rem;
+                margin: 1rem 0;
+                width: 98.5%;
                 overflow: auto;
                 padding: 1rem;
                 box-sizing: border-box;

@@ -28,7 +28,7 @@ const routes = [
         import: () => import('./views/gallery.js'),
         routes: [
             {
-                path: ":repository",
+                path: ":username/:repository",
                 component: "gallery-entry-view",
                 import: () => import("./views/gallery-entry.js")
             },

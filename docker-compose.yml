@@ -1,4 +1,4 @@
-version: '3.5'
+version: "3.5"
 
 services:
   api:
@@ -11,7 +11,7 @@ services:
     env_file:
       - .env
     links:
-        - db
+      - db
 
   frontend:
     build:
@@ -34,7 +34,7 @@ services:
       - POSTGRES_PASSWORD=root
       - POSTGRES_USER=root
       - POSTGRES_DB=dotties-dev
-
+      
         #  migration:
         #    build:
         #      context: db/local_db/migration/.
@@ -48,3 +48,6 @@ services:
         #volumes:
         #  db-dotties:
 
+
+        #volumes:
+        #db-dotties:
