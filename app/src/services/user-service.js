@@ -1,4 +1,5 @@
 import { API_URL } from "../util/api-util";
+import { logOut } from "./auth-service";
 
 const apiEndpoint = "/user";
 
@@ -6,11 +7,24 @@ const apiEndpoint = "/user";
  * @param {string} username
  */
 export function getUser(username) {
-    return fetch(API_URL + apiEndpoint + "/" + username).then(res => res.json());
+    return fetch(API_URL + apiEndpoint + `?username=${username}`)
+        .then(res => {
+            if (res.status === 404) {
+                throw Error("User not found");
+            }
+            return res;
+        })
+        .then(res => res.json())
+        .catch(err => {
+            console.error(err);
+            return {};
+        });
 }
 
 export function getLoggedUser() {
-    return fetch(API_URL + apiEndpoint).then(res => res.json());
+    return fetch(API_URL + apiEndpoint, {
+        credentials: "include"
+    }).then(res => res.json());
 }
 
 /**
@@ -24,9 +38,13 @@ export function updateUser(updateData) {
     })
 }
 
-export function deleteUser() {
-    return fetch(API_URL + apiEndpoint, {
+export async function deleteUser() {
+    const res = await fetch(API_URL + apiEndpoint, {
         method: "DELETE",
         credentials: "include"
     })
+
+    if (res.status === 200) {
+        logOut();
+    }
 }

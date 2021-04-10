@@ -1,8 +1,9 @@
 import { LitElement, html, css } from 'lit-element';
 import '../components/github-signin';
+import '../components/icon';
+import '../components/loading-animation';
 import { getGithubUser } from '../services/github-user-service';
 import { getLoggedUser, getUser } from '../services/user-service';
-import '../components/icon';
 import { github, twitter } from '../icons/social';
 
 class ProfileView extends LitElement {
@@ -28,31 +29,29 @@ class ProfileView extends LitElement {
     }
 
     async initializeUserInformation() {
-        if (this.username) {
-            await this.getUserInformation();
-        } else {
-            await this.getLoggedUserInformation();
-        }
-        // TODO: Delete Mock
-        this.user = {
-            username: 'Matsuuu',
-            repositories: [{ id: 123, name: 'Matsuuu/dotfiles' }],
-        };
-        if (this.user) {
-            await this.getGithubUserInformation(this.user.username);
+        // If username is provided with the url, get the info for that user.
+        // If no usernae is provided, we're on the user profile page
+        // and need to get the info of current logged in user
+        if (this.username) await this.getUserInformation();
+        else await this.getLoggedUserInformation();
+
+        if (this.userDataIsSet()) {
+            await this.getGithubUserInformation(this.user.github_username);
         }
         console.log(this.user);
 
         this.userInfoInitialized = true;
     }
 
+    userDataIsSet() {
+        return Object.keys(this.user).length > 0;
+    }
+
     async getUserInformation() {
-        return; // Waiting for API implementation
         this.user = await getUser(this.username);
     }
 
     async getLoggedUserInformation() {
-        return; // Waiting for API implementation
         this.user = await getLoggedUser();
     }
 
@@ -62,8 +61,21 @@ class ProfileView extends LitElement {
     }
 
     render() {
-        return html` ${this.userInfoInitialized && this.user ? this.renderUserProfile() : this.renderLogin()} `;
+        // If still loading info
+        if (!this.userInfoInitialized) return html`<loading-animation></loading-animation>`;
+        // If loaded other user info but no-one was found
+        if (this.userInfoInitialized && this.username && !this.userDataIsSet()) return this.render404();
+        return html` ${this.userDataIsSet() ? this.renderUserProfile() : this.renderLogin()} `;
     }
+
+    render404() {
+        return html`
+            <div class="not-found">
+                <h2>User could not be found</h2>
+            </div>
+        `;
+    }
+
     renderLogin() {
         return html`
             <div class="sign-in-page">
@@ -73,14 +85,14 @@ class ProfileView extends LitElement {
             </div>
         `;
     }
+
     renderUserProfile() {
         return html`
             <div class="profile-picture">
                 <img src=${this.user.avatar_url} />
             </div>
             <div class="profile-info">
-                <label>Username</label>
-                <h3>${this.user.username}</h3>
+                <h3>${this.user.github_username}</h3>
                 <span class="socials">
                     <a href="https://twitter.com/${this.user.twitter_username}" target="_blank"
                         ><icon-svg path=${twitter}></icon-svg
@@ -88,9 +100,16 @@ class ProfileView extends LitElement {
                     <a href=${this.user.html_url} target="_blank"><icon-svg path=${github}></icon-svg></a>
                 </span>
 
-                <span class="repositories">
+                <span class="repositories-title">
                     <h3>Repositories</h3>
-                    <a href="/gallery/new">Add a repository</a>
+                    <a href="/gallery/new" class="add-repository">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <path
+                                d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm6 13h-5v5h-2v-5h-5v-2h5v-5h2v5h5v2z"
+                            />
+                        </svg>
+                        Add a repository</a
+                    >
                 </span>
                 <p>This will be replaced with similiar cards as the gallery page will have</p>
                 ${this.user.repositories.map(repo => html` <a href="/gallery/${repo.name}">${repo.name}</a> `)}
@@ -113,6 +132,13 @@ class ProfileView extends LitElement {
                     box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14),
                         0px 1px 8px 0px rgba(0, 0, 0, 0.12);
                     padding: 2rem 0;
+                }
+
+                .not-found {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 100%;
                 }
 
                 .sign-in-page {
@@ -161,19 +187,32 @@ class ProfileView extends LitElement {
                     padding-right: 1rem;
                 }
 
-                span.repositories {
+                span.repositories-title {
                     display: flex;
+                    justify-content: space-between;
+                    width: 95%;
                 }
 
-                span.repositories a {
-                    border: 2px solid #fff;
-                    background: none;
+                span.repositories-title a {
+                    background: #238636;
+                    border-radius: 10px;
                     color: #fff;
-                    font-size: 24px;
+                    font-size: 18px;
                     cursor: pointer;
                     text-decoration: none;
                     display: flex;
                     align-items: center;
+                    padding: 0 0.5rem;
+                    transition: 100ms ease-in-out;
+                }
+
+                span.repositories-title a:hover {
+                    background: #1f7630;
+                }
+
+                span.repositories-title svg {
+                    fill: #fff;
+                    margin-right: 0.5rem;
                 }
 
                 icon-svg {
@@ -184,6 +223,7 @@ class ProfileView extends LitElement {
 
                 a {
                     color: #fff;
+                    text-decoration: none;
                 }
             `,
         ];

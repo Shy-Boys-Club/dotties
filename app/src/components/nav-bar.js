@@ -143,12 +143,13 @@ class NavBar extends LitElement {
                 }
 
                 .dropdown-item {
-                    padding: 0.6rem 1rem;
                     cursor: pointer;
+                    display: flex;
                 }
 
-            .dropdown-item button,
-            .dropdown-item a {
+                .dropdown-item button,
+                .dropdown-item a {
+                    padding: 0.6rem 1rem;
                     font-size: 1.4rem;
                     background: none;
                     color: inherit;

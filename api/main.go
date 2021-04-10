@@ -11,6 +11,8 @@ import (
 	"github.com/Shy-Boys-Club/dotties/api/pkg/user"
 )
 
+type ApiRequest func(w http.ResponseWriter, r *http.Request)
+
 func helloWorld(writer http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(writer, `{"hello": "world hello"}`)
 }
@@ -36,19 +38,21 @@ func ping(writer http.ResponseWriter, r *http.Request) {
 func handleRequest() {
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("/user", user.GetCurrentUser)
-	mux.HandleFunc("/user/", user.GetUser)
+	mux.Handle("/user", wrap(user.HandleRequest))
 	mux.HandleFunc("/oauth/redirect", github.HandleOAuthRedirect)
 	mux.HandleFunc("/ping", ping)
-	mux.Handle("/auth/verify", Middleware(http.HandlerFunc(auth.Verify)))
-	mux.Handle("/auth/logout", Middleware(http.HandlerFunc(auth.InvaidateCookie)))
+	mux.Handle("/auth/verify", wrap(auth.Verify))
+	mux.Handle("/auth/logout", wrap(auth.InvalidateCookie))
 
 	log.Fatal(http.ListenAndServe(":3001", mux))
 }
 
+func wrap(fn ApiRequest) http.Handler {
+	return Middleware(http.HandlerFunc(fn))
+}
+
 func main() {
 	db.Migrate()
-
 	handleRequest()
 }
 
@@ -66,6 +70,6 @@ func Middleware(next http.Handler) http.Handler {
 func EnableCors(w *http.ResponseWriter, origin string) {
 	(*w).Header().Set("Access-Control-Allow-Origin", origin)
 	(*w).Header().Set("Access-Control-Allow-credentials", "true")
-	(*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	(*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, PATCH")
 	(*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 }
