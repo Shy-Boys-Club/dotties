@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8" />
-        <title>HTML Element Template</title>
+        <title>onlyDots</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
@@ -10,6 +10,7 @@
         <style>
             html,
             body {
+                width: 100%;
                 font-family: 'Roboto', sans-serif;
                 color: #fff;
 
@@ -25,6 +26,14 @@
 
     <body>
         <nav-bar></nav-bar>
-        <script src="src/router.js" type="module"></script>
+        <script src="https://unpkg.com/shiki"></script>
+        <script src="/src/main.js" type="module"></script>
+        <script src="/src/router.js" type="module"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/languages/ini.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/languages/vim.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/languages/json.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/languages/bash.min.js"></script>
     </body>
 </html>

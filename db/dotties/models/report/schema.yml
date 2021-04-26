@@ -1,0 +1,16 @@
+
+version: 2
+
+models:
+    - name: users
+      description: "Table containing user statistics"
+      columns:
+          - name: id
+            description: "The primary key for this table"
+            tests:
+                - unique
+                - not_null
+          - name: username
+            description: "Github username"
+            tests:
+                - not_null

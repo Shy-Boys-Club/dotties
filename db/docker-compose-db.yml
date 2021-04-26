@@ -1,0 +1,16 @@
+version: '3.2'
+
+services:
+  
+  db:
+    image: "postgres:latest"
+    container_name: "postgres-dotties"
+    ports:
+      - "5522:5432"
+#    volumes:
+#      - db-dotties:/var/lib/postgresql/data
+    env_file:
+      - .env_db
+
+#volumes:
+#  db-dotties:

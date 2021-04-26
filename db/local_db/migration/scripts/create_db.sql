@@ -1,0 +1,5 @@
+CREATE USER servicebotdotties WITH SUPERUSER LOGIN PASSWORD 'Bje123ASc7d71Yh4bTT';
+
+CREATE DATABASE dottiesdev;
+\c dottiesdev
+CREATE SCHEMA dotties;

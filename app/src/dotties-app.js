@@ -2,15 +2,12 @@ import { LitElement, html, css } from 'lit-element';
 import "./views/main-page-hero";
 
 export default class DottiesApp extends LitElement {
-    static get properties() {
-        return {
-            title: { type: String, reflect: true },
-        };
-    }
 
     constructor() {
         super();
-        this.title = 'Welcome to dotties';
+    }
+
+    firstUpdated() {
     }
 
 

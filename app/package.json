@@ -5,6 +5,7 @@
     "main": "index.js",
     "scripts": {
         "start": "wds --node-resolve --watch --open --app-index index.html",
+        "start-docker": "wds --node-resolve --watch --app-index index.html",
         "build": "rimraf dist && rollup -c rollup.config.js"
     },
     "keywords": [],
@@ -29,8 +30,8 @@
         ]
     },
     "dependencies": {
-        "@simplr-wc/router": "^6.1.2",
-        "lit-element": "^2.4.0",
-        "twind": "^0.16.9"
+        "@simplr-wc/router": "^6.1.4",
+        "@stoxy/core": "^0.2.6",
+        "lit-element": "^2.4.0"
     }
 }
