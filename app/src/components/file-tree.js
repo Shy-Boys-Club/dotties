@@ -9,6 +9,7 @@ class FileTree extends LitElement {
             tree: { type: Array },
             parsedTree: { type: Array },
             selectedFiles: { type: Array },
+            selectedFileNames: { type: Array }
         };
     }
 
@@ -17,11 +18,16 @@ class FileTree extends LitElement {
         this.tree = [];
         this.parsedTree = [];
         this.selectedFiles = [];
+        this.selectedFileNames = [];
     }
 
     updated(_changedProperties) {
         if (_changedProperties.get('tree')) {
             this.parseTree();
+        }
+
+        if (_changedProperties.get("selectedFiles")) {
+            this.selectedFileNames = this.selectedFiles.map(sf => sf.filepath);
         }
     }
 
@@ -50,13 +56,6 @@ class FileTree extends LitElement {
     }
 
     findFolderInTree(tree, folder) {
-        const folderPartsSplit = folder.split('/');
-        let parentFolderPath = '';
-
-        while (folderPartsSplit.length > 2) {
-            parentFolderPath += folderPartsSplit.shift();
-            tree = tree.find(b => (b.path = parentFolderPath));
-        }
         return tree.find(b => b.path === folder);
     }
 
@@ -102,6 +101,7 @@ class FileTree extends LitElement {
                 @click=${this.onFileSelect}
                 data-file-path=${branch.path}
                 ?is-folder=${branch.type === 'tree'}
+                ?selected=${this.selectedFileNames.includes(branch.path)}
             >
                 ${spacers} ${icon}
                 <p>${splitPath[splitPath.length - 1]}</p>

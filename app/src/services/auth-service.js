@@ -1,7 +1,8 @@
-import { write } from "@stoxy/core";
+import { clear, write } from "@stoxy/core";
 import { API_URL } from "../util/api-util";
 
 export function logOut() {
+    clear();
     fetch(API_URL + "/auth/logout", { credentials: "include" });
     window.location.pathname = "/";
 }

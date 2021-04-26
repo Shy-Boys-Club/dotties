@@ -4,5 +4,5 @@ import "./components/nav-bar";
 import { init } from "./router";
 
 init();
-persistKey("userData");
+persistKey("userData", "repository-selected-files");
 verifyAndSetUserdata();

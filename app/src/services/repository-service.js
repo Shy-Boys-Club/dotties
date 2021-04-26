@@ -1,6 +1,7 @@
 const GITHUB_API_BASE = `https://api.github.com`;
 const GITHUB_REPO_BASE = `https://github.com/REPO_NAME/blob/`
 const GITHUB_DOWNLOAD_BASE = `https://raw.githubusercontent.com/REPO_NAME/master/`
+const GITHUB_REPOSITORY_LIST_BASE = `https://api.github.com/users/USER_NAME/repos`;
 
 
 /**
@@ -44,4 +45,14 @@ export async function getRepositoryInformation(repoName) {
     } catch (err) {
         return null;
     }
+}
+
+/**
+ * @param {string} username
+ */
+export async function getUserRepositories(username) {
+    const repositoryListUrl = GITHUB_REPOSITORY_LIST_BASE.replace("USER_NAME", username);
+    const repositoryData = await fetch(repositoryListUrl);
+
+    return await repositoryData.json();
 }

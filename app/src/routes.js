@@ -35,7 +35,21 @@ const routes = [
             {
                 path: "new",
                 component: "repository-add-view",
-                import: () => import("./views/repository-add.js")
+                import: () => import("./views/repository-add.js"),
+                routes: [
+                    {
+                        path: ":username/:repository",
+                        component: "repository-add-view",
+                        import: () => import("./views/repository-add.js"),
+                        routes: [
+                            {
+                                path: "export",
+                                component: "repository-add-view",
+                                import: () => import("./views/repository-add.js")
+                            }
+                        ]
+                    },
+                ]
             }
         ]
     },
