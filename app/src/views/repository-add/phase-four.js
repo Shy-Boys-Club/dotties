@@ -5,6 +5,8 @@ class RepositoryAddPhaseFour extends LitElement {
         return {
             username: { type: String },
             repository: { type: String },
+            image: { type: Object },
+            imageSrc: { type: String },
         };
     }
 
@@ -12,17 +14,45 @@ class RepositoryAddPhaseFour extends LitElement {
         super();
         this.username = '';
         this.repository = '';
+        this.image = null;
+        this.imageSrc = null;
+    }
+
+    onImageUpdate(e) {
+        console.log(e.target.files[0]);
+        if (e.target.files.length <= 0) {
+            this.image = null;
+            this.imageSrc = null;
+        }
+
+        const fileReader = new FileReader();
+        fileReader.onload = () => {
+            this.imageSrc = fileReader.result;
+        };
+        fileReader.readAsDataURL(e.target.files[0]);
     }
 
     render() {
         return html`
-
             <h2>Submit repository</h2>
 
-            <p>Are you sure you want to submit the repository <a target="_blank" href="https://github.com/${this.username}/${this.repository}">${this.username}/${this.repository}</a></p>
+            <form>
+                <label for="repository">Repository name</label>
+                <input type="text" readonly name="repository" value="${this.username}/${this.repository}" />
+                <label for="description">Description</label>
+                <textarea
+                    cols="40"
+                    rows="8"
+                    name="description"
+                    placeholder="This is my dotfile repository and I'm proud of it"
+                ></textarea>
+                <label for="image">Showcase image</label>
+                <input @change=${this.onImageUpdate} type="file" name="image" />
 
-            <p>It is recommended to upload a image of your configuration in use. You can do so with the field below</p>
-            <p>TODO</p>
+                ${this.imageSrc ? html`<img src="${this.imageSrc}" />` : ''}
+
+                <input type="submit" value="Submit ${this.username}/${this.repository}" />
+            </form>
         `;
     }
 
@@ -35,9 +65,60 @@ class RepositoryAddPhaseFour extends LitElement {
                 justify-content: center;
             }
 
-        a {
-            color: inherit; 
-        }
+            a {
+                color: inherit;
+            }
+
+            form {
+                display: flex;
+                flex-direction: column;
+                max-width: 40%;
+                width: 40%;
+            }
+
+            form > * {
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            form img {
+                width: 100%;
+            }
+
+            input,
+            textarea,
+            label {
+                font-size: 1.1rem;
+            }
+
+            input,
+            textarea {
+                margin-bottom: 1rem;
+            }
+
+            input,
+            textarea {
+                margin: 0.25rem 0 1rem 0;
+                padding: 0.25rem;
+                background: rgba(255, 255, 255, 0.1);
+                border: none;
+                border-bottom: 1px solid #fff;
+                color: #fff;
+
+                font-family: 'Roboto', sans-serif;
+            }
+
+            input[type='submit'] {
+                background: #238636;
+                border: none;
+                border-radius: 4px;
+                color: #fff;
+                font-size: 18px;
+                cursor: pointer;
+                transition: 100ms ease-in-out;
+                padding: 0.5rem 1rem;
+                text-align: center;
+            }
         `;
     }
 }

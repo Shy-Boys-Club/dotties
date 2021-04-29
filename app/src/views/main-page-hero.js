@@ -53,7 +53,7 @@ class MainPageHero extends LitElement {
                 }
 
             h1 {
-            font-size: 3.6rem;
+            font-size: 3.2rem;
             }
 
             p {

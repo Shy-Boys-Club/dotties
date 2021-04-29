@@ -61,10 +61,12 @@ class RepositoryAddPhaseThree extends LitElement {
     render() {
         return html`
             <h2>Export the dotties.json</h2>
-            <p>
-                The dotties.json file is used by Dotties.io to map your configuration files to be displayed on the
-                dotties.io gallery.
-            </p>
+            <p>To display your dotfiles in dotties.io, a <code>dotties.json</code> -file is required to exist in your dotfiles root</p>
+
+            <button class="export-button" @click=${this.onExportAsPR}>
+                <h2>Export as a Pull Request</h2>
+                <p>Dotties Bot creates a pull request containing the new dotties.json in your repository</p>
+            </button>
             <button class="export-button" @click=${this.onCopyToClipboard}>
                 <h2>Copy Dotties.json to Clipboard</h2>
                 <p>
@@ -75,10 +77,6 @@ class RepositoryAddPhaseThree extends LitElement {
             <button class="export-button" @click=${this.onExportAsJson}>
                 <h2>Download dotties.json</h2>
                 <p>Add the downloaded file to your repository root to enable viewing in dotties.io</p>
-            </button>
-            <button class="export-button" @click=${this.onExportAsPR}>
-                <h2>Export as a Pull Request</h2>
-                <p>Dotties Bot creates a pull request containing the new dotties.json in your repository</p>
             </button>
         `;
     }
