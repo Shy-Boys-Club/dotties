@@ -21,6 +21,11 @@
             simplr-router-container {
                 background: var(--main-background-color);
             }
+
+            simplr-router-container[entering-view],
+            simplr-router-container[leaving-view] {
+                opacity: 0;
+            }
         </style>
     </head>
 

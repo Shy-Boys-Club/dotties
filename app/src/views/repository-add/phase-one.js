@@ -2,17 +2,20 @@ import { clear, read } from '@stoxy/core';
 import { css, html, LitElement } from 'lit-element';
 import { getUserRepositories } from '../../services/repository-service';
 import { repeat } from 'lit-html/directives/repeat';
+import "../../components/loading-animation";
 
 class RepositoryAddPhaseOne extends LitElement {
     static get properties() {
         return {
             repositories: { type: Array },
+            loading: { type: Boolean }
         };
     }
 
     constructor() {
         super();
         this.repositories = [];
+        this.loading = true;
     }
 
     firstUpdated() {
@@ -26,7 +29,7 @@ class RepositoryAddPhaseOne extends LitElement {
 
         if (username) {
             this.repositories = await getUserRepositories(username);
-            console.log(this.repositories);
+            this.loading = false;
         }
     }
 
@@ -34,11 +37,12 @@ class RepositoryAddPhaseOne extends LitElement {
         return html`
             <h2>Select your dotfiles repository</h2>
             <div class="repository-container">
+                ${this.loading ? html`<loading-animation></loading-animation>` : html`
                 ${repeat(
             this.repositories,
             repo => repo.id,
             repo => html` <a href="${window.location.href + "/" + repo.full_name}" class="repository" id="${repo.id}"><p>${repo.name}</p></a> `,
-        )}
+        )}`}
             </div>
         `;
     }

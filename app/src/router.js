@@ -4,12 +4,12 @@ import routes from './routes.js';
 
 export function init() {
     const routerOptions = {
-        // transitionSpeed: 200,
+        transitionSpeed: 100,
         // notFoundAction: () => console.error("not found"),
         // forbiddenAction () => console.error("forbidden"),
         routes: routes,
         // rootPath: my-app,
-        // disableTransition: false
+        disableTransition: true
     };
 
     const router = new SimplrRouter(routerOptions);

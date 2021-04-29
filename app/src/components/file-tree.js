@@ -141,7 +141,11 @@ class FileTree extends LitElement {
                 padding: 1rem;
                 background: #292c31;
                 border: 1px solid rgba(224, 224, 224, 1);
+            }
+
+            .tree-row:not([is-folder]):hover {
                 cursor: pointer;
+                background: #24272c;
             }
 
             .tree-row[selected] {
@@ -150,10 +154,6 @@ class FileTree extends LitElement {
 
             .tree-row[selected]:hover {
                 background: #366f38;
-            }
-
-            .tree-row:hover {
-                background: #24272c;
             }
 
             .spacer {
