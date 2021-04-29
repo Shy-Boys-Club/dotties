@@ -16,11 +16,7 @@ class RepositoryAddPhaseTwo extends LitElement {
     }
 
     render() {
-        return html` <div class="repository-add-navigation">
-                <button @click=${() => window.history.back()}>Back</button>
-                <a href="${window.location.href}/export">Export</a>
-            </div>
-            <h2>Select the files you want to showcase in dotties.io</h2>
+        return html`            <h2>Select the files you want to showcase in dotties.io</h2>
 
             <dotties-file-generator
                 .username=${this.username}

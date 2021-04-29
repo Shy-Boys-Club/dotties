@@ -46,6 +46,11 @@ const routes = [
                                 path: "export",
                                 component: "repository-add-view",
                                 import: () => import("./views/repository-add.js")
+                            },
+                            {
+                                path: "submit",
+                                component: "repository-add-view",
+                                import: () => import("./views/repository-add.js")
                             }
                         ]
                     },

@@ -1,4 +1,4 @@
-import { read } from '@stoxy/core';
+import { clear, read } from '@stoxy/core';
 import { css, html, LitElement } from 'lit-element';
 import { getUserRepositories } from '../../services/repository-service';
 import { repeat } from 'lit-html/directives/repeat';
@@ -17,6 +17,8 @@ class RepositoryAddPhaseOne extends LitElement {
 
     firstUpdated() {
         this.getRepositories();
+
+        clear("repository-selected-files");
     }
 
     async getRepositories() {

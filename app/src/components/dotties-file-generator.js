@@ -28,6 +28,7 @@ class DottiesFileGenerator extends LitElement {
         if (this.repository && this.username) {
             this.getRepositoryInfo();
             read("repository-selected-files").then(data => {
+                if (!data || !Array.isArray(data)) return;
                 this.selectedFiles = data
                 this.requestUpdate();
             });
@@ -77,39 +78,6 @@ class DottiesFileGenerator extends LitElement {
             dottiesJson[entry.filename] = entry.filepath;
         }
         return dottiesJson;
-    }
-
-    onCopyToClipboard() {
-        const dottiesJson = this.parseSelectedFilesIntoDottiesJsonFormat();
-        const el = document.createElement('textarea');
-        el.value = JSON.stringify(dottiesJson, null, 2);
-
-        document.body.appendChild(el);
-        el.select();
-        document.execCommand('copy');
-
-        el.remove();
-    }
-
-    onExportAsJson() {
-        const dottiesJson = this.parseSelectedFilesIntoDottiesJsonFormat();
-
-        const el = document.createElement('a');
-        el.setAttribute(
-            'href',
-            'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(dottiesJson, null, 2)),
-        );
-        el.setAttribute('download', 'dotties.json');
-        el.style.display = 'none';
-        document.body.appendChild(el);
-
-        el.click();
-        el.remove();
-    }
-
-    onExportAsPR(e) {
-        const dottiesJson = this.parseSelectedFilesIntoDottiesJsonFormat();
-        alert('Coming soon');
     }
 
     export() {
