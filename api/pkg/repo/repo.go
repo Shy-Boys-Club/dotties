@@ -41,17 +41,18 @@ func putRepo(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("error in parsing the form data")
 	}
 
-	//TODO
-	// get the users token from the request and lookup there ID in the database
-	// username, err := GetUsernameFromToken(w, r)
-	// if err != nil {
-	// }
+	user, err := db.GetUserFromToken(r)
+
+	if err != nil {
+		fmt.Println("yikes")
+		fmt.Fprintf(w, "{}")
+		return
+	}
 
 	repo := db.Repository{
-		URL:         r.Form.Get("repo_url"),
 		Name:        r.Form.Get("name"),
 		Description: r.Form.Get("description"),
-		User:        1,
+		User:        user.ID,
 	}
 
 	dbCon := db.GetDB()
@@ -63,19 +64,3 @@ func putRepo(w http.ResponseWriter, r *http.Request) {
 
 	json.NewEncoder(w).Encode(repo)
 }
-
-//TODO
-// Add this function into some utlity package as this function will likely need to be used in other places
-
-// func GetUsernameFromToken(w http.ResponseWriter, r *http.Request) (string, error) {
-// 	cookie, err := r.Cookie("dottie-token")
-// 	if err != nil {
-// 		fmt.Println("no cookie found in request")
-// 		fmt.Fprintf(w, "{}")
-// 		return "", err
-// 	}
-// 	token := auth.ReadJWT(&cookie.Value)
-// 	claims := auth.GetClaims(token)
-
-// 	return claims["UserName"].(string), nil
-// }
