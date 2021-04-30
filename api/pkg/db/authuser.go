@@ -59,7 +59,7 @@ func GetUserFromToken(r *http.Request) (*AuthUser, error) {
 	}
 	user.GithubUsername = claims["UserName"].(string)
 	conn := GetDB()
-	result := conn.Find(&user)
+	result := conn.Where("GithubUsername = ?", user.GithubUsername).First(&user)
 	if result.Error != nil {
 		return user, fmt.Errorf("User was not found in the database: %s", result.Error)
 	}
