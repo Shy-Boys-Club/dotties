@@ -40,7 +40,7 @@ func handleRequest() {
 	mux := http.NewServeMux()
 
 	mux.Handle("/user", wrap(user.HandleRequest))
-	mux.HandleFunc("/repos", repo.HandleRequest)
+	mux.Handle("/repos", wrap(repo.HandleRequest))
 	mux.HandleFunc("/oauth/redirect", github.HandleOAuthRedirect)
 	mux.HandleFunc("/ping", ping)
 	mux.Handle("/auth/verify", wrap(auth.Verify))
