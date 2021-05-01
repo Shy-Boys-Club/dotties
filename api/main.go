@@ -8,6 +8,7 @@ import (
 	"github.com/Shy-Boys-Club/dotties/api/pkg/auth"
 	"github.com/Shy-Boys-Club/dotties/api/pkg/db"
 	"github.com/Shy-Boys-Club/dotties/api/pkg/github"
+	"github.com/Shy-Boys-Club/dotties/api/pkg/repo"
 	"github.com/Shy-Boys-Club/dotties/api/pkg/user"
 )
 
@@ -39,6 +40,7 @@ func handleRequest() {
 	mux := http.NewServeMux()
 
 	mux.Handle("/user", wrap(user.HandleRequest))
+	mux.Handle("/repos", wrap(repo.HandleRequest))
 	mux.HandleFunc("/oauth/redirect", github.HandleOAuthRedirect)
 	mux.HandleFunc("/ping", ping)
 	mux.Handle("/auth/verify", wrap(auth.Verify))

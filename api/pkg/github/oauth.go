@@ -112,7 +112,6 @@ func retrieveCode(r *http.Request) (string, error) {
 func getTokenFromGB(code string) (GithubAccessResponse, error) {
 
 	ghU := fmt.Sprintf("https://github.com/login/oauth/access_token?client_id=%s&client_secret=%s&code=%s", ghClientId, ghClientSec, code)
-
 	fmt.Println(ghU)
 	req, err := http.NewRequest(http.MethodPost, ghU, nil)
 	if err != nil {
@@ -132,6 +131,7 @@ func getTokenFromGB(code string) (GithubAccessResponse, error) {
 	json.NewDecoder(r.Body).Decode(&t)
 	if len(t.AccessToken) <= 0 {
 		fmt.Println("FAILED TO PARSE JSON")
+		fmt.Println(r.StatusCode)
 		fmt.Println(r.Body)
 		return t, fmt.Errorf("Failed to parse json repsonse from GitHub: %v", err)
 	}
