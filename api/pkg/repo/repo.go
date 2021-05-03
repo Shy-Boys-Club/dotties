@@ -36,21 +36,26 @@ func getRepos(w http.ResponseWriter, r *http.Request) {
 
 func putRepo(w http.ResponseWriter, r *http.Request) {
 	//start by checking the form for any errors
-	err := r.ParseForm()
+	err := r.ParseMultipartForm(10000000)
 	if err != nil {
 		fmt.Println("error in parsing the form data")
+        fmt.Println(err)
+        // TODO: Handle error cases
+		fmt.Fprintf(w, "{}")
+        return;
 	}
 
 	user, err := db.GetUserFromToken(r)
 
 	if err != nil {
 		fmt.Println("yikes")
+        fmt.Println(err)
 		fmt.Fprintf(w, "{}")
 		return
 	}
 
 	repo := db.Repository{
-		Name:        r.Form.Get("name"),
+		Name:        r.Form.Get("repository"),
 		Description: r.Form.Get("description"),
 		User:        user.ID,
 	}

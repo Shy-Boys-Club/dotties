@@ -1,4 +1,5 @@
 import { css, html, LitElement } from 'lit-element';
+import { submitRepository } from '../../services/repository-service';
 
 class RepositoryAddPhaseFour extends LitElement {
     static get properties() {
@@ -32,11 +33,19 @@ class RepositoryAddPhaseFour extends LitElement {
         fileReader.readAsDataURL(e.target.files[0]);
     }
 
+    async onSubmit(e) {
+        e.preventDefault();
+
+        const formData = new FormData(e.target);
+        const res = await submitRepository(formData);
+        console.log(res);
+    }
+
     render() {
         return html`
             <h2>Submit repository</h2>
 
-            <form>
+            <form @submit=${this.onSubmit}>
                 <label for="repository">Repository name</label>
                 <input type="text" readonly name="repository" value="${this.username}/${this.repository}" />
                 <label for="description">Description</label>

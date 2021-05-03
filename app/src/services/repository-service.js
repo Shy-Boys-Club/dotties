@@ -1,3 +1,5 @@
+import { API_URL } from "../util/api-util";
+
 const GITHUB_API_BASE = `https://api.github.com`;
 const GITHUB_REPO_BASE = `https://github.com/REPO_NAME/blob/`
 const GITHUB_DOWNLOAD_BASE = `https://raw.githubusercontent.com/REPO_NAME/master/`
@@ -55,4 +57,19 @@ export async function getUserRepositories(username) {
     const repositoryData = await fetch(repositoryListUrl);
 
     return await repositoryData.json();
+}
+
+/**
+ * @param {FormData} formData
+ */
+export async function submitRepository(formData) {
+    const addRepositoryUrl = API_URL + "/repos";
+
+    const res = await fetch(addRepositoryUrl, {
+        method: "POST",
+        credentials: "include",
+        body: formData
+    });
+
+    return await res.json();
 }
