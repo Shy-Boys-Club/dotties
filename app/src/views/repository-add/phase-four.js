@@ -1,3 +1,4 @@
+import { changeView } from '@simplr-wc/router';
 import { css, html, LitElement } from 'lit-element';
 import { submitRepository } from '../../services/repository-service';
 
@@ -38,7 +39,13 @@ class RepositoryAddPhaseFour extends LitElement {
 
         const formData = new FormData(e.target);
         const res = await submitRepository(formData);
-        console.log(res);
+
+        if (!res) {
+            // TODO: Handle error
+            return;
+        }
+
+        changeView("/gallery/" + res.Name);
     }
 
     render() {

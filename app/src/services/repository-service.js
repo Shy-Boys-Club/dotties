@@ -59,6 +59,12 @@ export async function getUserRepositories(username) {
     return await repositoryData.json();
 }
 
+export async function getRepositoryDataFromAPI(repoName) {
+    const repositoryDataUrl = API_URL + "/repos";
+
+
+}
+
 /**
  * @param {FormData} formData
  */
