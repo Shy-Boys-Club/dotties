@@ -54,14 +54,17 @@ export async function getRepositoryInformation(repoName) {
     }
 }
 
+export async function getRepositories() {
+    const repositoryListUrl = API_URL + `/repos`;
+    return await fetch(repositoryListUrl).then(res => res.json());
+}
+
 /**
  * @param {string} username
  */
 export async function getUserRepositories(username) {
     const repositoryListUrl = GITHUB_REPOSITORY_LIST_BASE.replace('USER_NAME', username);
-    const repositoryData = await fetch(repositoryListUrl);
-
-    return await repositoryData.json();
+    return await await fetch(repositoryListUrl).then(res => res.json());
 }
 
 /**
