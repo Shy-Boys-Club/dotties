@@ -1,11 +1,12 @@
 import { LitElement, html, css } from 'lit-element';
-import { getDotfiles } from '../services/repository-service';
+import { getDotfiles, getRepositoryDataFromAPI } from '../services/repository-service';
 import '../components/dotfile-viewer';
 
 class GalleryEntryView extends LitElement {
     static get properties() {
         return {
             dotfiles: { type: Array },
+            repositoryData: { type: Object },
             username: { type: String },
             repository: { type: String },
         };
@@ -14,18 +15,27 @@ class GalleryEntryView extends LitElement {
     constructor() {
         super();
         this.dotfiles = {};
+        this.repositoryData = {};
         this.username = '';
         this.repository = '';
     }
 
     firstUpdated() {
-        getDotfiles(this.username + '/' + this.repository).then(dotfiles => {
+        const repoName = this.username + "/" + this.repository;
+        getRepositoryDataFromAPI(repoName).then(repositoryData => {
+            console.log(repositoryData);
+            this.repositoryData = repositoryData;
+        });
+        getDotfiles(repoName).then(dotfiles => {
             console.log(dotfiles);
             this.dotfiles = dotfiles;
         });
     }
 
     renderFiles() {
+        if (!this.dotfiles) {
+            return html`<p>No dotties.json file is present in the repository</p>`;
+        }
         return Object.keys(this.dotfiles).map(dotfileKey => {
             return html` <dotfile-viewer title=${dotfileKey} .dotfile=${this.dotfiles[dotfileKey]}></dotfile-viewer> `;
         });
@@ -33,9 +43,11 @@ class GalleryEntryView extends LitElement {
 
     render() {
         return html`
-            <h2>${this.username}</h2>
+            <h2>${this.username}/${this.repository}</h2>
 
             <img src="https://raw.githubusercontent.com/Matsuuu/dotfiles/master/unixpr_3.png" />
+
+            <p>${this.repositoryData?.Description}</p>
 
             <div class="dotfile-list">
                 ${this.renderFiles()}
