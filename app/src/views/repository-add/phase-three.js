@@ -62,6 +62,7 @@ class RepositoryAddPhaseThree extends LitElement {
         return html`
             <h2>Export the dotties.json</h2>
             <p>To display your dotfiles in dotties.io, a <code>dotties.json</code> -file is required to exist in your dotfiles root</p>
+            <p>You can later on just update the dotties.json file to update the file listing in dotties.io</p>
 
             <button class="export-button" @click=${this.onExportAsPR}>
                 <h2>Export as a Pull Request</h2>
