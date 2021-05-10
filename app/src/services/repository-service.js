@@ -84,9 +84,13 @@ export async function submitRepository(formData) {
 
     const res = await fetch(addRepositoryUrl, {
         method: 'POST',
-        credentials: 'include',
+        credentials: "include",
         body: formData,
     });
 
-    return await res.json();
+    if (res.status <= 204)
+        return await res.json();
+
+    const errorText = await res.text();
+    return { error: errorText };
 }

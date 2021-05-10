@@ -2,10 +2,12 @@ package repo
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 
 	"github.com/Shy-Boys-Club/dotties/api/pkg/db"
+	"gorm.io/gorm"
 )
 
 func HandleRequest(w http.ResponseWriter, r *http.Request) {
@@ -68,7 +70,11 @@ func updateOrInsertRepo(repo *db.Repository) (error) {
 	dbCon := db.GetDB()
     // Record not found
     if err != nil {
-        dbCon.Create(&repo)
+        if errors.Is(err, gorm.ErrRecordNotFound) {        
+            dbCon.Create(&repo)
+        } else {
+            return err
+        }
     } else {
         // TODO: Update all the fields we want to update
         existingRepository.Description = repo.Description
@@ -84,17 +90,15 @@ func putRepo(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println("error in parsing the form data")
         fmt.Println(err)
-        // TODO: Handle error cases
-		fmt.Fprintf(w, "{}")
+        http.Error(w, "Error parsing form data: " + err.Error(), 500)
         return;
 	}
 
 	user, err := db.GetUserFromToken(r)
 
 	if err != nil {
-		fmt.Println("yikes")
         fmt.Println(err)
-		fmt.Fprintf(w, "{}")
+        http.Error(w, err.Error(), 500)
 		return
 	}
 
@@ -104,16 +108,13 @@ func putRepo(w http.ResponseWriter, r *http.Request) {
 		User:        user.ID,
 	}
 
-    updateOrInsertRepo(&repo)
+    err = updateOrInsertRepo(&repo)
 
-    /*
-	dbCon := db.GetDB()
-	result := dbCon.Create(&repo)
-	if result.Error != nil {
-		fmt.Println("failed to write to database")
-		return
-	}
-    */
+    if err != nil {
+        fmt.Println(err)
+        http.Error(w, err.Error(), 500)
+        return
+    }
 
 	json.NewEncoder(w).Encode(repo)
 }

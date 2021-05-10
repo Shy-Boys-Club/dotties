@@ -9,6 +9,7 @@ class RepositoryAddPhaseFour extends LitElement {
             repository: { type: String },
             image: { type: Object },
             imageSrc: { type: String },
+            error: { type: String }
         };
     }
 
@@ -18,6 +19,7 @@ class RepositoryAddPhaseFour extends LitElement {
         this.repository = '';
         this.image = null;
         this.imageSrc = null;
+        this.error = null;
     }
 
     onImageUpdate(e) {
@@ -42,6 +44,12 @@ class RepositoryAddPhaseFour extends LitElement {
 
         if (!res) {
             // TODO: Handle error
+            this.error = "Something went wrong while attempting to submit";
+            return;
+        }
+
+        if (res.error) {
+            this.error = res.error;
             return;
         }
 
@@ -67,6 +75,7 @@ class RepositoryAddPhaseFour extends LitElement {
 
                 ${this.imageSrc ? html`<img src="${this.imageSrc}" />` : ''}
 
+                ${this.error ? html`<p class="error-text">${this.error}</p>` : ''}
                 <input type="submit" value="Submit ${this.username}/${this.repository}" />
             </form>
         `;
@@ -135,6 +144,10 @@ class RepositoryAddPhaseFour extends LitElement {
                 transition: 100ms ease-in-out;
                 padding: 0.5rem 1rem;
                 text-align: center;
+            }
+
+            .error-text {
+                color: red;
             }
         `;
     }

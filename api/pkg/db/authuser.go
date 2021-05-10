@@ -55,7 +55,7 @@ func GetUserFromToken(r *http.Request) (*AuthUser, error) {
 	user := &AuthUser{}
 	claims, err := GetClaimsFromToken(r)
 	if err != nil {
-		return user, fmt.Errorf("failed to get claims from user")
+		return user, fmt.Errorf("Failed to authenticate user")
 	}
 	user.GithubUsername = claims["UserName"].(string)
 	conn := GetDB()
