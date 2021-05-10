@@ -45,7 +45,7 @@ class GalleryEntryView extends LitElement {
         return html`
             <h2>${this.username}/${this.repository}</h2>
 
-            <img src="https://raw.githubusercontent.com/Matsuuu/dotfiles/master/unixpr_3.png" />
+            <img src="${this.repositoryData?.ImageURL}" />
 
             <p>${this.repositoryData?.Description}</p>
 

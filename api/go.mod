@@ -3,6 +3,10 @@ module github.com/Shy-Boys-Club/dotties/api
 go 1.15
 
 require (
+	github.com/aws/aws-sdk-go-v2 v1.4.0 // indirect
+	github.com/aws/aws-sdk-go-v2/config v1.1.7 // indirect
+	github.com/aws/aws-sdk-go-v2/credentials v1.1.7 // indirect
+	github.com/aws/aws-sdk-go-v2/service/s3 v1.6.0 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/fatih/structs v1.1.0
 	github.com/google/go-github v17.0.0+incompatible // indirect
