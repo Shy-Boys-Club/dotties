@@ -9,6 +9,7 @@ type Repository struct {
 	User        uint64
 	Name        string
 	Description string
+	ImageURL    string
 	Score       int64
 	CreatedAt   time.Time
 }
